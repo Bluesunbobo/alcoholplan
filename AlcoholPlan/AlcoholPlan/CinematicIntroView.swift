@@ -80,7 +80,7 @@ struct CinematicIntroView: View {
                             .tracking(4.0)
 
                         // Chinese inspiration credit
-                        Text("本应用开发思路源于电影《Druk》(醉好的时光)")
+                        Text("本应用（微醺志）开发思路源于电影《Druk》")
                             .font(.system(size: 11, weight: .light, design: .serif))
                             .foregroundColor(.white.opacity(0.60))
                             .padding(.top, 6)
