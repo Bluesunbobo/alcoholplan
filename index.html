@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Druk - 酒精计划</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#C8862A',
+                        danger: '#8B1A2B',
+                        background: '#0D0A08',
+                        card: '#1A1410',
+                        textPrimary: '#F0E6D3',
+                        textSecondary: '#8C7B6B',
+                        safe: '#2A6B4A',
+                        warning: '#BA7517'
+                    },
+                    fontFamily: {
+                        mono: ['SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'monospace'],
+                        georgia: ['Georgia', 'serif'],
+                        sf: ['SF Pro Rounded', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+                        'button': '0 4px 12px rgba(200, 134, 42, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .glass-effect {
+                @apply bg-card/80 backdrop-blur-md border border-white/10 rounded-2xl;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .gradient-bg {
+                background: linear-gradient(180deg, #0D0A08 0%, #1A1410 100%);
+            }
+            .status-bg {
+                background: linear-gradient(180deg, rgba(200, 134, 42, 0.1) 0%, rgba(200, 134, 42, 0.05) 100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-textPrimary font-sf min-h-screen gradient-bg">
+    <!-- 主容器 -->
+    <div class="max-w-md mx-auto px-4 py-6">
+        <!-- 顶部栏 -->
+        <div class="flex items-center justify-between mb-6">
+            <!-- 应用标题 -->
+            <h1 class="text-2xl font-georgia italic text-textPrimary">Druk</h1>
+            
+            <!-- 右侧按钮组 -->
+            <div class="flex items-center space-x-3">
+                <!-- 国家选择 -->
+                <div class="relative">
+                    <button class="flex items-center space-x-2 bg-white/10 px-3 py-2 rounded-full text-sm">
+                        <span>🇨🇳</span>
+                        <span>中国</span>
+                    </button>
+                </div>
+                
+                <!-- 客人模式 -->
+                <button class="flex items-center space-x-2 bg-white/10 px-3 py-2 rounded-full text-sm">
+                    <i class="fa fa-user"></i>
+                    <span>自己</span>
+                </button>
+                
+                <!-- 设置 -->
+                <button class="p-2 text-textSecondary hover:text-textPrimary">
+                    <i class="fa fa-cog"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 台词区 -->
+        <div class="text-center mb-6">
+            <p class="font-georgia italic text-textSecondary text-sm">
+                "人类血液中天生缺少 0.05% 的酒精。今晚，你补上了。"
+            </p>
+        </div>
+        
+        <!-- 主卡片 -->
+        <div class="glass-effect p-6 shadow-glass mb-6">
+            <!-- 酒精度数部分 -->
+            <div class="mb-6">
+                <h2 class="text-xs text-textSecondary uppercase tracking-wider mb-2">酒精度数</h2>
+                <div class="flex items-end mb-3">
+                    <span class="text-4xl font-mono text-primary">5.0</span>
+                    <span class="text-lg text-textSecondary ml-1">%</span>
+                </div>
+                <!-- 滑块 -->
+                <input type="range" min="0.1" max="70" step="0.1" value="5.0" 
+                       class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                       oninput="this.nextElementSibling.textContent = this.value">
+                <div class="text-xs text-textSecondary mt-1">5.0%</div>
+                
+                <!-- 酒类预设 -->
+                <div class="flex overflow-x-auto space-x-2 mt-4 pb-2">
+                    <button class="bg-primary text-black px-3 py-1.5 rounded-full text-xs whitespace-nowrap">🍺 啤酒</button>
+                    <button class="bg-white/10 text-textPrimary px-3 py-1.5 rounded-full text-xs whitespace-nowrap">🍷 葡萄酒</button>
+                    <button class="bg-white/10 text-textPrimary px-3 py-1.5 rounded-full text-xs whitespace-nowrap">🥂 香槟</button>
+                    <button class="bg-white/10 text-textPrimary px-3 py-1.5 rounded-full text-xs whitespace-nowrap">🥃 威士忌</button>
+                    <button class="bg-white/10 text-textPrimary px-3 py-1.5 rounded-full text-xs whitespace-nowrap">🍶 白酒</button>
+                </div>
+            </div>
+            
+            <div class="w-full h-px bg-white/10 my-4"></div>
+            
+            <!-- 饮酒量部分 -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-xs text-textSecondary uppercase tracking-wider">饮酒量</h2>
+                    <div class="flex space-x-2">
+                        <button class="bg-primary text-black px-3 py-1 rounded-full text-xs">ml</button>
+                        <button class="bg-white/10 text-textPrimary px-3 py-1 rounded-full text-xs">两</button>
+                        <button class="bg-white/10 text-textPrimary px-3 py-1 rounded-full text-xs">oz</button>
+                    </div>
+                </div>
+                <div class="text-5xl font-mono text-textPrimary text-center">350</div>
+            </div>
+            
+            <!-- 箭头 -->
+            <div class="flex justify-center my-2">
+                <i class="fa fa-exchange text-textSecondary"></i>
+            </div>
+            
+            <!-- BAC部分 -->
+            <div class="mt-6">
+                <h2 class="text-xs text-textSecondary uppercase tracking-wider mb-2">血液酒精浓度</h2>
+                <div class="flex items-end justify-center mb-3">
+                    <span class="text-5xl font-mono text-primary">0.052</span>
+                    <span class="text-lg text-textSecondary ml-1">%</span>
+                </div>
+                
+                <!-- 状态徽章 -->
+                <div class="flex justify-center mb-4">
+                    <span class="bg-primary/20 text-primary px-4 py-1.5 rounded-full text-xs font-medium">
+                        ✨ 哲学黄金点 · 人类理想状态
+                    </span>
+                </div>
+                
+                <!-- BAC预设 -->
+                <div class="flex justify-center space-x-3 mt-4">
+                    <button class="bg-primary/20 text-primary px-3 py-2 rounded-lg text-xs text-center">
+                        <div>完美微醺</div>
+                        <div class="font-mono text-sm">0.05%</div>
+                    </button>
+                    <button class="bg-warning/20 text-warning px-3 py-2 rounded-lg text-xs text-center">
+                        <div>酒驾</div>
+                        <div class="font-mono text-sm">0.08%</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 保存按钮 -->
+        <button class="w-full bg-gradient-to-b from-primary to-primary/80 text-black font-semibold py-4 rounded-xl shadow-button mb-6">
+            <div class="flex items-center justify-center space-x-2">
+                <i class="fa fa-bookmark"></i>
+                <span>封存在此刻</span>
+            </div>
+        </button>
+        
+        <!-- 免责声明 -->
+        <div class="text-center">
+            <p class="text-xs text-textSecondary/60">
+                结果仅供娱乐与理论参考，不考虑代谢与个体差异<br>
+                请勿作为驾驶参考，饮酒请适量
+            </p>
+        </div>
+    </div>
+    
+    <!-- 模拟iOS状态栏 -->
+    <div class="fixed top-0 left-0 right-0 bg-background z-50 flex justify-between items-center px-4 py-2 text-textPrimary text-sm">
+        <div>12:08</div>
+        <div class="flex items-center space-x-1">
+            <i class="fa fa-signal"></i>
+            <i class="fa fa-wifi"></i>
+            <i class="fa fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <script>
+        // 模拟BAC值变化
+        function updateBAC() {
+            const bacElement = document.querySelector('.text-5xl.font-mono.text-primary');
+            const currentBAC = parseFloat(bacElement.textContent);
+            const newBAC = (currentBAC + 0.001).toFixed(3);
+            bacElement.textContent = newBAC;
+        }
+        
+        // 每2秒更新一次BAC值
+        setInterval(updateBAC, 2000);
+        
+        // 模拟滑块交互
+        const slider = document.querySelector('input[type="range"]');
+        slider.addEventListener('input', function() {
+            this.nextElementSibling.textContent = this.value + '%';
+            const abvValue = document.querySelector('.text-4xl.font-mono.text-primary');
+            abvValue.textContent = parseFloat(this.value).toFixed(1);
+        });
+    </script>
+</body>
+</html>
