@@ -61,10 +61,34 @@ class PosterRenderer {
         return images
     }
     
-    /// Returns rendered UIImages [Live Poster, Heatmap Poster] for preview purposes
+    /// Returns rendered UIImages [Moment, Live Session, Heatmap] for preview
     func createLivePosterImages(brain: AlcoholBrain, userSettings: UserSettings) -> [UIImage] {
         var images: [UIImage] = []
         
+        // ── 1. BAC Moment Snapshot poster (always first — captures right now) ──
+        let persona = userSettings.selectedPersona
+        let momentData = BACMomentData(
+            timestamp: Date(),
+            bacValue: brain.bacPercentage,
+            stateZh: brain.currentStateNameZh,
+            stateEn: brain.currentStateNameEn,
+            quoteZh: brain.currentQuote.quote,
+            quoteEn: brain.currentQuote.translation,
+            personaName: persona.rawValue,
+            personaZhName: persona.zhName,
+            personaAvatarImage: persona.avatarImageName
+        )
+        let momentView = BACMomentPosterView(data: momentData)
+            .environment(\.colorScheme, .dark)
+        
+        let momentRenderer = ImageRenderer(content: momentView)
+        momentRenderer.scale = 2.0
+        
+        if let momentImg = momentRenderer.uiImage {
+            images.append(momentImg)
+        }
+        
+        // ── 2. Session summary poster (only if drinks are recorded) ──
         let drinks = brain.drinks
         if !drinks.isEmpty {
             let trajectory = brain.getTrajectoryPoints()
@@ -114,7 +138,7 @@ class PosterRenderer {
             }
         }
         
-        // Generate Heatmap
+        // ── 3. Heatmap / Annual report poster ──
         let heatmapData = createHeatmapData(targetYear: nil)
         let heatmapView = HeatmapPosterView(data: heatmapData)
             .environment(\.colorScheme, .dark)
@@ -179,7 +203,7 @@ class PosterRenderer {
             return PosterDrinkDetail(name: name, abv: value.abv, volumeML: value.vol)
         }.sorted { $0.volumeML > $1.volumeML }
         
-        let stateRange = QuotesDB.shared.getStateRange(for: peakBAC, in: userSettings.selectedCountry, isSoberingDown: false)
+        let stateRange = QuotesDB.shared.getStateRange(for: peakBAC, in: userSettings.selectedCountry, isSoberingDown: false, persona: userSettings.selectedPersona)
         let randomQuote = stateRange.quotes.randomElement() ?? QuotesDB.shared.neutralQuotes.randomElement()!
         
         return PosterSessionData(

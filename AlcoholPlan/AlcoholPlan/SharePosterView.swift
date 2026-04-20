@@ -20,18 +20,19 @@ struct SharePosterView: View {
             // Chart: Metabolism Curve
             chartSection
             
-            Spacer(minLength: 40)
+            Spacer(minLength: 12)
             
             // Info Grid
             statsGridSection
             
-            Spacer(minLength: 40)
+            Spacer(minLength: 12)
             
             // Footer: Quote & Attribution
             footerSection
         }
         .padding(40)
-        .frame(width: 400, height: 720) // Standard high-res aspect ratio base
+        .frame(width: 400, height: 720)
+        .clipped() // Ensure no overflow visually
         .background(
             ZStack {
                 Color.surfaceDim
@@ -78,13 +79,17 @@ struct SharePosterView: View {
                     .font(.system(size: 24, weight: .regular, design: .serif).italic())
                     .foregroundColor(.onSurface)
                     .multilineTextAlignment(.center)
-                    .lineSpacing(6)
+                    .lineSpacing(4)
+                    .lineLimit(4)
+                    .minimumScaleFactor(0.6)
                 
                 Text(sessionData.quoteEn)
                     .font(.system(size: 10, weight: .medium, design: .monospaced))
                     .foregroundColor(.primary.opacity(0.8))
                     .multilineTextAlignment(.center)
-                    .lineSpacing(4)
+                    .lineSpacing(2)
+                    .lineLimit(5)
+                    .minimumScaleFactor(0.5)
             }
             
             // The Big Number (Focal Point)
@@ -140,32 +145,54 @@ struct SharePosterView: View {
     
     private var statsGridSection: some View {
         HStack(spacing: 0) {
-            VStack(spacing: 8) {
+            // Left: Drink intake — centred column
+            VStack(alignment: .center, spacing: 8) {
                 Text("本次摄入 / INTAKE")
                     .font(.system(size: 8, weight: .bold, design: .monospaced))
                     .foregroundColor(.onSurface.opacity(0.3))
                 
                 VStack(spacing: 4) {
-                    ForEach(sessionData.drinksDetail, id: \.self) { drink in
+                    let displayedDrinks = sessionData.drinksDetail.prefix(3)
+                    let remainingCount = sessionData.drinksDetail.count - displayedDrinks.count
+                    
+                    ForEach(displayedDrinks, id: \.self) { drink in
                         HStack(spacing: 4) {
                             Text(drink.name)
-                                .font(.system(size: 10, design: .monospaced))
+                                .font(.system(size: 9, design: .monospaced))
                                 .foregroundColor(.onSurface.opacity(0.8))
                             Text("\(Int(drink.volumeML))ML")
-                                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                                .font(.system(size: 11, weight: .bold, design: .monospaced))
                                 .foregroundColor(.onSurface)
                             Text("(\(String(format: "%.1f", drink.abv * 100))%)")
-                                .font(.system(size: 8, design: .monospaced))
+                                .font(.system(size: 7, design: .monospaced))
                                 .foregroundColor(.primary.opacity(0.8))
                         }
+                    }
+                    
+                    if remainingCount > 0 {
+                        Text("+ \(remainingCount) MORE")
+                            .font(.system(size: 7, weight: .bold, design: .monospaced))
+                            .foregroundColor(.primary.opacity(0.4))
                     }
                 }
             }
             .frame(maxWidth: .infinity)
             
-            Divider().background(Color.white.opacity(0.1)).frame(height: 30)
+            // Vertical divider
+            Rectangle()
+                .fill(Color.white.opacity(0.1))
+                .frame(width: 1, height: 44)
             
-            StatItem(label: "峰值时间 / PEAK AT", value: sessionData.peakTime)
+            // Right: Peak time — centred column
+            VStack(alignment: .center, spacing: 8) {
+                Text("峰值时间 / PEAK AT")
+                    .font(.system(size: 8, weight: .bold, design: .monospaced))
+                    .foregroundColor(.onSurface.opacity(0.3))
+                Text(sessionData.peakTime)
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    .foregroundColor(.onSurface)
+            }
+            .frame(maxWidth: .infinity)
         }
         .padding(.vertical, 20)
         .background(RoundedRectangle(cornerRadius: 16).fill(Color.white.opacity(0.03)))

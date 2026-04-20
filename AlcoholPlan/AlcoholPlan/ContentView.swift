@@ -85,7 +85,8 @@ struct ContentView: View {
             defaultWeight: settings.defaultWeight,
             defaultGender: settings.defaultGender,
             defaultCountry: settings.selectedCountry,
-            defaultRate: settings.selectedMetabolicRate
+            defaultRate: settings.selectedMetabolicRate,
+            defaultPersona: settings.selectedPersona
         ))
     }
 
@@ -693,7 +694,7 @@ struct DashboardView: View {
                         .foregroundColor(.primary)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .padding(20)
             .glassCard()
             
@@ -727,10 +728,11 @@ struct DashboardView: View {
                     }
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .padding(20)
             .glassCard()
         }
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 
@@ -1758,6 +1760,7 @@ struct SettingsView: View {
     @ObservedObject var userSettings: UserSettings
     @ObservedObject var brain: AlcoholBrain
     @State private var showAboutSheet = false
+    @State private var showPrivacySheet = false
     
     var body: some View {
         ZStack {
@@ -1770,7 +1773,7 @@ struct SettingsView: View {
                         SettingsPersonaSection(userSettings: userSettings, brain: brain)
                         SettingsBiometricsSection(userSettings: userSettings, brain: brain)
                         SettingsMetabolismSection(userSettings: userSettings, brain: brain)
-                        SettingsFooterView(userSettings: userSettings, showAboutSheet: $showAboutSheet)
+                        SettingsFooterView(userSettings: userSettings, showAboutSheet: $showAboutSheet, showPrivacySheet: $showPrivacySheet)
                     }
                 }
                 .padding(.horizontal, 24)
@@ -1779,6 +1782,9 @@ struct SettingsView: View {
         }
         .sheet(isPresented: $showAboutSheet) {
             AboutDrukSheet()
+        }
+        .sheet(isPresented: $showPrivacySheet) {
+            PrivacyView()
         }
     }
 }
@@ -1811,6 +1817,8 @@ struct SettingsPersonaSection: View {
                     Button(action: {
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
                             userSettings.personaStore = p.rawValue
+                            brain.persona = p
+                            brain.refreshQuote()
                         }
                         UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     }) {
@@ -2205,6 +2213,7 @@ struct SettingsMetabolismSection: View {
 struct SettingsFooterView: View {
     @ObservedObject var userSettings: UserSettings
     @Binding var showAboutSheet: Bool
+    @Binding var showPrivacySheet: Bool
     
     var body: some View {
         VStack(spacing: 24) {
@@ -2281,9 +2290,12 @@ struct SettingsFooterView: View {
                 Link("Our Philosophy", destination: URL(string: "#")!)
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(.onSurfaceVariant.opacity(0.6))
-                Link("Privacy Policy", destination: URL(string: "#")!)
-                    .font(.system(size: 11, design: .monospaced))
-                    .foregroundColor(.onSurfaceVariant.opacity(0.6))
+                
+                Button(action: { showPrivacySheet = true }) {
+                    Text("Privacy Policy")
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundColor(.onSurfaceVariant.opacity(0.6))
+                }
             }
             
             Text("\"In vino veritas, in aqua sanitas.\"")

@@ -18,6 +18,7 @@ class AlcoholBrain: ObservableObject {
     @Published var gender: Gender
     @Published var country: CountryLaw
     @Published var metabolicRate: MetabolicRate
+    @Published var persona: Persona
     
     @Published var pendingABV: Double = 0.05 {
         didSet { syncSimulation() }
@@ -60,11 +61,12 @@ class AlcoholBrain: ObservableObject {
     
     private let context = PersistenceController.shared.container.viewContext
     
-    init(defaultWeight: Double, defaultGender: Gender, defaultCountry: CountryLaw, defaultRate: MetabolicRate = .medium) {
+    init(defaultWeight: Double, defaultGender: Gender, defaultCountry: CountryLaw, defaultRate: MetabolicRate = .medium, defaultPersona: Persona = .martin) {
         self.weight = defaultWeight
         self.gender = defaultGender
         self.country = defaultCountry
         self.metabolicRate = defaultRate
+        self.persona = defaultPersona
         
         loadActiveSession()
         startTimers()
@@ -369,7 +371,7 @@ class AlcoholBrain: ObservableObject {
     
     func updateStateLabels(forBAC: Double? = nil) {
         let targetBAC = forBAC ?? bacPercentage
-        let stateRange = QuotesDB.shared.getStateRange(for: targetBAC, in: country, isSoberingDown: forBAC == nil ? isSoberingDown : false)
+        let stateRange = QuotesDB.shared.getStateRange(for: targetBAC, in: country, isSoberingDown: forBAC == nil ? isSoberingDown : false, persona: persona)
         
         self.currentStateNameZh = stateRange.stateNameZh
         self.currentStateNameEn = stateRange.stateNameEn
@@ -377,7 +379,7 @@ class AlcoholBrain: ObservableObject {
     
     func refreshQuote(forBAC: Double? = nil) {
         let targetBAC = forBAC ?? bacPercentage
-        let stateRange = QuotesDB.shared.getStateRange(for: targetBAC, in: country, isSoberingDown: forBAC == nil ? isSoberingDown : false)
+        let stateRange = QuotesDB.shared.getStateRange(for: targetBAC, in: country, isSoberingDown: forBAC == nil ? isSoberingDown : false, persona: persona)
         
         updateStateLabels(forBAC: targetBAC)
         
@@ -461,132 +463,5 @@ class AlcoholBrain: ObservableObject {
             metabolicRate: self.metabolicRate,
             referenceTime: Date()
         )
-    }
-}
-import Foundation
-
-struct Quote {
-    let quote: String
-    let translation: String
-    let type: QuoteType
-}
-
-enum QuoteType {
-    case philosophic
-    case scientific
-    case warning
-    case neutral
-}
-
-class QuotesDB {
-    static let shared = QuotesDB()
-    
-    let neutralQuotes: [Quote] = [
-        Quote(quote: "葡萄酒是被水聚拢的阳光。", translation: "Wine is sunlight, held together by water. (Galileo)", type: .neutral),
-        Quote(quote: "节制是美德，但不如勇气更有趣。", translation: "Moderation is a virtue, but less fun than courage.", type: .neutral),
-        Quote(quote: "最好的对话发生在第三杯之后，第五杯之前。", translation: "The best conversations happen after the third glass and before the fifth.", type: .neutral),
-        Quote(quote: "生命太短暂，不该用来假装清醒。", translation: "Life is too short to pretend to be sober.", type: .neutral),
-        Quote(quote: "他们开始喝酒，是为了活得更好。后来他们发现，那只是另一种活法。", translation: "They started drinking to live better. Then they found it was just another way of living.", type: .neutral),
-        Quote(quote: "在某些夜晚，你需要的不是答案，而是陪伴。", translation: "On some nights, you don't need answers, just company.", type: .neutral),
-        Quote(quote: "不是每一杯都值得喝。但每一杯都值得记住。", translation: "Not every glass is worth drinking, but every glass is worth remembering.", type: .neutral),
-        Quote(quote: "Ernest Hemingway 说：写醉，改清醒。也许生活也是一样。", translation: "Write drunk, edit sober. Maybe life is the same.", type: .neutral),
-        Quote(quote: "喝酒不能解决问题。但它能让你暂时不在乎那个问题。这有时候也是一种解法。", translation: "Drinking doesn't solve problems. But it makes you stop caring for a while.", type: .neutral)
-    ]
-    
-    struct StateRange {
-        let minBAC: Double
-        let maxBAC: Double
-        let stateNameZh: String
-        let stateNameEn: String
-        let avatarImage: String
-        let quotes: [Quote]
-        let isCritical: Bool
-    }
-    
-    // Based on PRD 4.2 Table
-    func getStateRange(for bac: Double, in country: CountryLaw, isSoberingDown: Bool) -> StateRange {
-        
-        if isSoberingDown {
-            return StateRange(minBAC: 0, maxBAC: 1.0, stateNameZh: "清醒倒计时", stateNameEn: "Sobering Up", avatarImage: "personality_sobering", quotes: [
-                Quote(quote: "酒精会离开。它带走的东西，有时不会回来。", translation: "Alcohol leaves. What it takes away sometimes doesn't come back.", type: .philosophic),
-                Quote(quote: "你的肝脏正在以约 0.015% 每小时的速度处理它。", translation: "Your liver is processing it at about 0.015% per hour.", type: .scientific),
-                Quote(quote: "等待，也是一种选择。", translation: "Waiting is also a choice.", type: .philosophic)
-            ], isCritical: false)
-        }
-        
-        if bac < 0.001 {
-            return StateRange(minBAC: 0.0, maxBAC: 0.001, stateNameZh: "清醒如水", stateNameEn: "The Sober", avatarImage: "personality_sober", quotes: [
-                Quote(quote: "我们生来就缺少一点什么。", translation: "We are born missing something. (Skårderud)", type: .philosophic),
-                Quote(quote: "今晚，你想成为哪个版本的自己？", translation: "Which version of yourself do you want to be tonight?", type: .philosophic),
-                Quote(quote: "还没开始。或者，已经结束了。", translation: "It hasn't started yet. Or, it's already over.", type: .philosophic)
-            ], isCritical: false)
-        }
-        
-        if country.isZeroTolerance && bac >= 0.001 {
-            return StateRange(minBAC: 0.001, maxBAC: 1.0, stateNameZh: "零容忍区域", stateNameEn: "Zero Tolerance Zone", avatarImage: "personality_sober", quotes: [
-                Quote(quote: "你选择的国家/地区对任何可检测酒精实行零容忍。在这里，任何饮酒后驾车均违法。", translation: "Your region imposes zero tolerance on alcohol. Any driving after drinking is illegal.", type: .warning)
-            ], isCritical: true)
-        }
-        
-        let dwiLimit = country.dwiLimit ?? 1.0
-        // unused duiLimit removed
-        
-        if bac >= 0.150 {
-            return StateRange(minBAC: 0.150, maxBAC: 1.0, stateNameZh: "过度醉酒", stateNameEn: "Highly Intoxicated", avatarImage: "personality_druk", quotes: [
-                Quote(quote: "这个水平存在医疗风险。请确保身边有人陪伴。", translation: "Medical risk present. Ensure someone is with you.", type: .warning),
-                Quote(quote: "BAC 0.15% 以上：意识障碍和呼吸抑制风险显著上升。", translation: "High risk of impaired consciousness and respiratory depression.", type: .scientific),
-                Quote(quote: "有些梦，还是不醒比较好。", translation: "Some dreams are better left uninterrupted.", type: .philosophic)
-            ], isCritical: true)
-        }
-        
-        if bac >= 0.100 {
-            return StateRange(minBAC: 0.100, maxBAC: 0.149, stateNameZh: "沉醉时分", stateNameEn: "The Druk", avatarImage: "personality_druk", quotes: [
-                Quote(quote: "在某个时刻，我们不再是在庆祝，而是在逃跑。", translation: "At some point, we are no longer celebrating, but running away.", type: .philosophic),
-                Quote(quote: "平衡感明显受影响。记忆出现空白的可能性在上升。", translation: "Balance is notably impaired. Risk of memory blackout is rising.", type: .scientific),
-                Quote(quote: "宇宙在模糊中变得清晰。", translation: "The universe becomes clear in the blur.", type: .philosophic)
-            ], isCritical: true)
-        }
-        
-        if bac >= dwiLimit || bac >= 0.081 {
-            return StateRange(minBAC: 0.081, maxBAC: 0.099, stateNameZh: "边界之上", stateNameEn: "Over the Line", avatarImage: "personality_drifter", quotes: [
-                Quote(quote: "这不是评判。这只是一个事实：你现在不适合驾车。", translation: "This isn't a judgment. It's a fact: you are not fit to drive now.", type: .warning),
-                Quote(quote: "边界的另一边是法律，不是感受。", translation: "On the other side of the boundary is the law, not feelings.", type: .warning),
-                Quote(quote: "漂浮的灵魂，需要一个港湾。", translation: "A floating soul needs a harbor.", type: .philosophic)
-            ], isCritical: true)
-        }
-        
-        if bac >= 0.051 {
-            return StateRange(minBAC: 0.051, maxBAC: 0.080, stateNameZh: "明显感受", stateNameEn: "Noticeably There", avatarImage: "personality_drifter", quotes: [
-                Quote(quote: "你感觉很好。这不是假的。但它也不会持续太久。", translation: "You feel great. It's not fake. But it won't last long.", type: .philosophic),
-                Quote(quote: "什么是青春？一场梦。什么是爱？梦的内容。", translation: "What is youth? A dream. What is love? The content of the dream. (Kierkegaard)", type: .philosophic),
-                Quote(quote: "协调能力开始轻微下降。请不要开车。", translation: "Coordination is slightly down. Please don't drive.", type: .warning)
-            ], isCritical: false)
-        }
-        
-        if bac >= 0.050 {
-            return StateRange(minBAC: 0.050, maxBAC: 0.0509, stateNameZh: "哲学黄金点", stateNameEn: "The Philosophic Gold Point", avatarImage: "personality_philosopher", quotes: [
-                Quote(quote: "人类血液中天生缺少 0.05% 的酒精。今晚，你补上了。", translation: "Humans are born lacking 0.05% alcohol. Tonight, you made it up.", type: .philosophic),
-                Quote(quote: "感受是主观的，身体是诚实的。", translation: "Feelings are subjective, the body is honest.", type: .scientific)
-            ], isCritical: false)
-        }
-        
-        if bac >= 0.031 {
-            return StateRange(minBAC: 0.031, maxBAC: 0.049, stateNameZh: "渐入佳境", stateNameEn: "Settling In", avatarImage: "personality_sensual", quotes: [
-                Quote(quote: "丹麦人把这叫做 'hyggelig'——舒适、温暖、完全在场。", translation: "The Danes call this 'hyggelig' — cozy, warm, fully present.", type: .philosophic),
-                Quote(quote: "对话开始变得有趣了。", translation: "The conversation is starting to get interesting.", type: .philosophic)
-            ], isCritical: false)
-        }
-        
-        if bac >= 0.020 {
-            return StateRange(minBAC: 0.020, maxBAC: 0.030, stateNameZh: "微醺助性点", stateNameEn: "The Sensual Sweet Spot", avatarImage: "personality_sensual", quotes: [
-                Quote(quote: "你开始比五分钟前更像你自己了。", translation: "You are starting to feel more like yourself than five minutes ago.", type: .philosophic),
-                Quote(quote: "触碰变得更真实。声音更清晰。", translation: "Touch becomes more real. Sounds become clearer.", type: .scientific)
-            ], isCritical: false)
-        }
-        
-        return StateRange(minBAC: 0.001, maxBAC: 0.019, stateNameZh: "刚刚开始", stateNameEn: "Just Starting", avatarImage: "personality_sensual", quotes: [
-            Quote(quote: "第一杯之后，世界的边缘变得柔软了一点点。", translation: "After the first glass, the edges of the world got a little bit softer.", type: .philosophic),
-            Quote(quote: "酒精正在进入你的血液。", translation: "Alcohol is entering your blood.", type: .scientific)
-        ], isCritical: false)
     }
 }

@@ -38,12 +38,12 @@ struct HeatmapPosterView: View {
             // Heatmap Grid
             gridSection
             
-            Spacer(minLength: 40)
+            Spacer(minLength: 12)
             
             // Stats Grid
             statsGridSection
             
-            Spacer(minLength: 40)
+            Spacer(minLength: 12)
             
             // Footer
             footerSection
@@ -54,12 +54,7 @@ struct HeatmapPosterView: View {
             ZStack {
                 Color.surfaceDim
                 
-                // Ghost Year Watermark
-                Text(data.year)
-                    .font(.system(size: 220, weight: .black, design: .serif))
-                    .foregroundColor(Color.primary.opacity(0.03))
-                    .rotationEffect(.degrees(-15))
-                    .offset(y: -30)
+
                 
                 RadialGradient(
                     colors: [Color.primary.opacity(0.12), Color.clear],
@@ -97,18 +92,22 @@ struct HeatmapPosterView: View {
     }
     
     private var heroSection: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 8) {
             Text("\"\(data.quoteZh)\"")
                 .font(.system(size: 24, weight: .regular, design: .serif).italic())
                 .foregroundColor(.onSurface)
                 .multilineTextAlignment(.center)
-                .lineSpacing(6)
+                .lineSpacing(4)
+                .lineLimit(4)
+                .minimumScaleFactor(0.6)
             
             Text(data.quoteEn)
                 .font(.system(size: 10, weight: .medium, design: .monospaced))
                 .foregroundColor(.primary.opacity(0.8))
                 .multilineTextAlignment(.center)
-                .lineSpacing(4)
+                .lineSpacing(2)
+                .lineLimit(4)
+                .minimumScaleFactor(0.5)
         }
     }
     
@@ -178,11 +177,46 @@ struct HeatmapPosterView: View {
     
     private var statsGridSection: some View {
         HStack(spacing: 0) {
-            StatItem(label: "记录饮酒 / SESSIONS", value: "\(data.totalDrinks) 次")
-            Divider().background(Color.white.opacity(0.1)).frame(height: 30)
-            StatItem(label: "最高峰值 / HIGHEST BAC", value: String(format: "%.3f%%", data.highestBAC))
+            // Left: Session count
+            VStack(alignment: .center, spacing: 10) {
+                VStack(spacing: 2) {
+                    Text("记录饮酒")
+                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .foregroundColor(.onSurface.opacity(0.3))
+                    Text("SESSIONS")
+                        .font(.system(size: 8, design: .monospaced))
+                        .tracking(1.5)
+                        .foregroundColor(.onSurface.opacity(0.2))
+                }
+                Text("\(data.totalDrinks) 次")
+                    .font(.system(size: 16, weight: .bold, design: .monospaced))
+                    .foregroundColor(.onSurface)
+            }
+            .frame(maxWidth: .infinity)
+            
+            // Vertical divider
+            Rectangle()
+                .fill(Color.white.opacity(0.1))
+                .frame(width: 1, height: 48)
+            
+            // Right: Highest BAC
+            VStack(alignment: .center, spacing: 10) {
+                VStack(spacing: 2) {
+                    Text("最高峰值")
+                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .foregroundColor(.onSurface.opacity(0.3))
+                    Text("HIGHEST BAC")
+                        .font(.system(size: 8, design: .monospaced))
+                        .tracking(1.5)
+                        .foregroundColor(.onSurface.opacity(0.2))
+                }
+                Text(String(format: "%.3f%%", data.highestBAC))
+                    .font(.system(size: 16, weight: .bold, design: .monospaced))
+                    .foregroundColor(.onSurface)
+            }
+            .frame(maxWidth: .infinity)
         }
-        .padding(.vertical, 20)
+        .padding(.vertical, 24)
         .background(RoundedRectangle(cornerRadius: 16).fill(Color.white.opacity(0.03)))
     }
     
