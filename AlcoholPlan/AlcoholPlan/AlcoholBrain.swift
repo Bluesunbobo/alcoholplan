@@ -43,6 +43,8 @@ class AlcoholBrain: ObservableObject {
     @Published var totalLiquidVolumeML: Double = 0.0
     @Published var isSoberingDown: Bool = false
     @Published var soberDate: Date? = nil
+    @Published var peakBACTime: Date? = nil
+    @Published var safeDate: Date? = nil
     
     var isSimulating: Bool {
         pendingVolumeML > 0 || isInputFocused
@@ -58,6 +60,7 @@ class AlcoholBrain: ObservableObject {
     
     private var timer: AnyCancellable?
     private var quoteTimer: AnyCancellable?
+    private var recentQuoteTexts: [String] = [] // History for deduplication
     
     private let context = PersistenceController.shared.container.viewContext
     
@@ -117,6 +120,8 @@ class AlcoholBrain: ObservableObject {
                 self.isSoberingDown = false
                 self.syncSimulation()
                 self.soberDate = nil
+                self.peakBACTime = nil
+                self.safeDate = nil
             }
             if Thread.isMainThread { updates() } else { DispatchQueue.main.async(execute: updates) }
             return
@@ -152,6 +157,9 @@ class AlcoholBrain: ObservableObject {
         let hoursUntilSober = totalPotentialPeak / beta
         let calculatedSoberDate = firstDrinkTime.addingTimeInterval(hoursUntilSober * 3600)
         
+        let hoursUntilSafe = (totalPotentialPeak - country.duiLimit) / beta
+        let calculatedSafeDate = hoursUntilSafe > 0 ? firstDrinkTime.addingTimeInterval(hoursUntilSafe * 3600) : nil
+        
         let lastDrinkTime = drinks.last!.timestamp
         let timeSinceLast = now.timeIntervalSince(lastDrinkTime) / 3600.0
         let newIsSoberingDown = (timeSinceLast > 0.75) && finalBAC > 0
@@ -162,6 +170,7 @@ class AlcoholBrain: ObservableObject {
             self.totalLiquidVolumeML = self.drinks.map { $0.volumeML }.reduce(0, +)
             self.isSoberingDown = newIsSoberingDown
             self.soberDate = finalBAC > 0.0001 ? calculatedSoberDate : nil
+            self.safeDate = (totalPotentialPeak > self.country.duiLimit) ? calculatedSafeDate : nil
             
             if let session = self.activeSession {
                 if finalBAC > session.peakBAC {
@@ -170,6 +179,9 @@ class AlcoholBrain: ObservableObject {
             }
             
             self.syncSimulation()
+            
+            let points = self.getTrajectoryPoints()
+            self.peakBACTime = points.max(by: { $0.bac < $1.bac })?.time
             
             if !self.isInputFocused && self.pendingVolumeML <= 0 {
                 self.displayBACString = String(format: "%.3f", finalBAC)
@@ -366,6 +378,8 @@ class AlcoholBrain: ObservableObject {
         totalAlcoholGrams = 0.0
         totalLiquidVolumeML = 0.0
         isSoberingDown = false
+        peakBACTime = nil
+        safeDate = nil
         refreshQuote()
     }
     
@@ -385,10 +399,28 @@ class AlcoholBrain: ObservableObject {
         
         self.currentAvatarImage = stateRange.avatarImage
         
-        if let newQuote = stateRange.quotes.randomElement() {
+        // Anti-repeat logic: Filter candidates against recently shown quotes
+        let candidates = stateRange.quotes.isEmpty ? QuotesDB.shared.neutralQuotes : stateRange.quotes
+        var filtered = candidates.filter { !recentQuoteTexts.contains($0.quote) }
+        
+        // If pool is too small and everything was filtered out, just exclude the very last one
+        if filtered.isEmpty && !candidates.isEmpty {
+            if let last = recentQuoteTexts.last {
+                filtered = candidates.filter { $0.quote != last }
+            }
+        }
+        
+        // Fallback: use unfiltered if needed
+        let pool = filtered.isEmpty ? candidates : filtered
+        
+        if let newQuote = pool.randomElement() {
             self.currentQuote = newQuote
-        } else {
-            self.currentQuote = QuotesDB.shared.neutralQuotes.randomElement()!
+            
+            // Update history
+            recentQuoteTexts.append(newQuote.quote)
+            if recentQuoteTexts.count > 8 { // Keep last 8 for variety
+                recentQuoteTexts.removeFirst()
+            }
         }
     }
     

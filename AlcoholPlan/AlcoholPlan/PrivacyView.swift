@@ -69,14 +69,26 @@ struct PrivacyView: View {
                         )
 
                         // Footer Note
-                        VStack(spacing: 8) {
+                        VStack(spacing: 12) {
                             Divider().background(Color.white.opacity(0.1))
+                            
                             Text("如有任何疑问，请联系我们：")
                                 .font(.system(size: 11))
                                 .foregroundColor(.onSurfaceVariant.opacity(0.5))
-                            Text("SUPPORT@DRUK.APP")
-                                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                                .foregroundColor(.primary.opacity(0.6))
+                            
+                            Link("BESTSKILLZ2000@GMAIL.COM", destination: URL(string: "mailto:bestskillz2000@gmail.com")!)
+                                .font(.system(size: 13, weight: .bold, design: .monospaced))
+                                .foregroundColor(.primary.opacity(0.8))
+                            
+                            Link(destination: URL(string: "https://bluesunbobo.github.io/alcoholplan/")!) {
+                                HStack(spacing: 4) {
+                                    Text("查看在线版本 / View Online")
+                                    Image(systemName: "arrow.up.right")
+                                }
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .foregroundColor(.primary.opacity(0.5))
+                                .padding(.top, 8)
+                            }
                         }
                         .padding(.top, 24)
                         .padding(.bottom, 40)

@@ -6,6 +6,8 @@ struct CountryPickerView: View {
     @ObservedObject var brain: AlcoholBrain
     
     @State private var searchText = ""
+    @State private var showingProhibitionAlert = false
+    @State private var pendingCountry: CountryLaw?
     
     private var filteredCountries: [CountryLaw] {
         if searchText.isEmpty {
@@ -64,7 +66,12 @@ struct CountryPickerView: View {
                             let isSelected = userSettings.selectedCountry == country
                             
                             Button(action: {
-                                selectCountry(country)
+                                if country.isProhibition {
+                                    pendingCountry = country
+                                    showingProhibitionAlert = true
+                                } else {
+                                    selectCountry(country)
+                                }
                             }) {
                                 HStack(spacing: 16) {
                                     // Flag
@@ -75,25 +82,21 @@ struct CountryPickerView: View {
                                     
                                     // Names
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text(country.name)
-                                            .font(.system(size: 18, weight: .bold, design: .serif).italic())
+                                        Text(country.displayBilingualName)
+                                            .font(.system(size: 16, weight: .bold, design: .serif).italic())
                                             .foregroundColor(isSelected ? .primary : .onSurface)
-                                        Text(country.enName.uppercased())
-                                            .font(.system(size: 10, weight: .bold, design: .monospaced))
-                                            .tracking(1.0)
-                                            .foregroundColor(isSelected ? .primary.opacity(0.7) : .onSurface.opacity(0.4))
                                     }
                                     
                                     Spacer()
                                     
                                     // Limits Info
                                     VStack(alignment: .trailing, spacing: 4) {
-                                        Text("DUI LIMIT")
+                                        Text(country.isProhibition ? "LEGAL STATUS" : "DUI LIMIT")
                                             .font(.system(size: 8, weight: .bold, design: .monospaced))
                                             .foregroundColor(.onSurface.opacity(0.3))
-                                        Text(String(format: "%.2f%%", country.duiLimit))
+                                        Text(country.isProhibition ? "禁酒" : String(format: "%.2f%%", country.duiLimit))
                                             .font(.system(size: 16, weight: .bold, design: .monospaced))
-                                            .foregroundColor(isSelected ? .primary : .tertiary)
+                                            .foregroundColor(country.isProhibition ? .error : (isSelected ? .primary : .tertiary))
                                     }
                                 }
                                 .padding(20)
@@ -112,6 +115,15 @@ struct CountryPickerView: View {
                     .padding(24)
                 }
             }
+        }
+        .alert("法律合规提示 / Legal Compliance", isPresented: $showingProhibitionAlert) {
+            Button("我已了解 / I Understand", role: .cancel) {
+                if let country = pendingCountry {
+                    selectCountry(country)
+                }
+            }
+        } message: {
+            Text("酒精在该地区受法律禁止，请务必遵守当地法律法规。\n\nAlcohol is prohibited in this region. Please comply with local laws and regulations.")
         }
     }
     

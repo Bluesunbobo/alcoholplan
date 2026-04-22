@@ -187,7 +187,9 @@ struct DashboardView: View {
                 VStack(spacing: 32) {
                     Group {
                         dashboardHeader
-                        currentPersonaDisplay
+                        if brain.country.isProhibition {
+                            prohibitionBanner
+                        }
                         bacDisplayCard
                         quoteCard
                         inputCard
@@ -243,80 +245,120 @@ struct DashboardView: View {
     
     // MARK: Header Components
     private var dashboardHeader: some View {
-        HStack(alignment: .bottom) {
-            HStack(alignment: .bottom, spacing: 12) {
-                // Character Avatar in Header
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 12) {
+                // Character Avatar + Identity
                 Image(userSettings.selectedPersona.avatarImageName)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 44, height: 44)
+                    .frame(width: 56, height: 56)
                     .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.primary.opacity(0.2), lineWidth: 1))
-                    .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
+                    .overlay(Circle().stroke(Color.primary.opacity(0.15), lineWidth: 1.5))
+                    .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
                 
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Druk")
-                        .font(.system(size: 24, weight: .bold, design: .serif).italic())
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(userSettings.selectedPersona.displayBilingualName)
+                        .font(.system(size: 14, weight: .bold, design: .serif))
                         .foregroundColor(.primary)
                     
-                    Text(userSettings.selectedPersona.zhName)
-                        .font(.system(size: 10, design: .monospaced))
-                        .tracking(1.5)
-                        .foregroundColor(.onSurface.opacity(0.6))
+                    Text("\(userSettings.selectedPersona.zhPersonaType) / \(userSettings.selectedPersona.enPersonaType)")
+                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                        .foregroundColor(.onSurface.opacity(0.5))
+                        .tracking(0.5)
                 }
             }
             
             Spacer()
             
-            Button(action: { 
-                if brain.drinks.isEmpty {
-                    self.showingHistorySelection = true
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                } else {
-                    self.showingShareOptions = true
+            VStack(alignment: .trailing, spacing: 16) {
+                Text("Druk")
+                    .font(.system(size: 28, weight: .bold, design: .serif).italic())
+                    .foregroundColor(.primary.opacity(0.9))
+                
+                Button(action: { 
+                    if brain.drinks.isEmpty {
+                        self.showingHistorySelection = true
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    } else {
+                        self.showingShareOptions = true
+                    }
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "square.and.arrow.up")
+                        Text("SHARE / 分享")
+                            .font(.system(size: 10, weight: .bold, design: .monospaced))
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 8)
+                    .background(Color.primary.opacity(brain.drinks.isEmpty ? 0.04 : 0.08))
+                    .foregroundColor(.primary.opacity(brain.drinks.isEmpty ? 0.3 : 1.0))
+                    .clipShape(Capsule())
                 }
-            }) {
-                HStack(spacing: 8) {
-                    Image(systemName: "square.and.arrow.up")
-                    Text("SHARE / 分享")
-                        .font(.system(size: 10, weight: .bold, design: .monospaced))
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(Color.primary.opacity(brain.drinks.isEmpty ? 0.05 : 0.1))
-                .foregroundColor(.primary.opacity(brain.drinks.isEmpty ? 0.4 : 1.0))
-                .clipShape(Capsule())
             }
         }
         .padding(.top, 16)
     }
     
-    // MARK: Current Persona Display (Non-interactive)
-    private var currentPersonaDisplay: some View {
-        HStack {
-            Spacer()
-            HStack(spacing: 8) {
-                Text("CURRENT PERSONA: \(userSettings.selectedPersona.rawValue.uppercased())")
-                    .font(.system(size: 9, weight: .medium, design: .monospaced))
-                    .tracking(1.5)
-                Text("/ 当前人格: \(userSettings.selectedPersona.zhName)")
-                    .font(.system(size: 9, weight: .medium, design: .monospaced))
+    private var prohibitionBanner: some View {
+        HStack(spacing: 20) {
+            // Left: Glowing Warning Icon
+            ZStack {
+                Circle()
+                    .fill(Color.error.opacity(0.15))
+                    .frame(width: 44, height: 44)
+                    .blur(radius: 8)
+                
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(.error)
+                    .shadow(color: .error.opacity(0.5), radius: 6)
             }
-            .foregroundColor(.onSurface.opacity(0.5))
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(
-                Capsule()
-                    .fill(Color.surfaceContainerHighest.opacity(0.3))
-                    .overlay(
-                        Capsule()
-                            .stroke(Color.white.opacity(0.05), lineWidth: 1)
-                    )
-            )
+            
+            // Right: Multi-language Warning
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 6) {
+                    Text(brain.country.flag)
+                    Text("\(brain.country.displayBilingualName) · 禁酒地区")
+                        .font(.system(size: 13, weight: .bold, design: .monospaced))
+                        .foregroundColor(.error)
+                }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("酒精在该地区受法律禁止，请遵守当地法规。")
+                        .font(.system(size: 11, weight: .medium, design: .serif).italic())
+                        .foregroundColor(.error.opacity(0.95))
+                    Text("ALCOHOL IS PROHIBITED BY LAW. PLEASE COMPLY.")
+                        .font(.system(size: 8, weight: .bold, design: .monospaced))
+                        .foregroundColor(.error.opacity(0.5))
+                        .tracking(1.0)
+                }
+            }
+            
             Spacer()
         }
-        .padding(.top, 8)
+        .padding(20)
+        .background(
+            ZStack {
+                Color.error.opacity(0.06)
+                Color.surfaceDim.opacity(0.2)
+            }
+            .background(.ultraThinMaterial)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(
+                    LinearGradient(
+                        colors: [.error.opacity(0.5), .error.opacity(0.1)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1.5
+                )
+        )
+        .shadow(color: .black.opacity(0.2), radius: 15, x: 0, y: 8)
     }
+    
     
     // MARK: BAC Display Card (Redesigned per reference design)
     private var bacDisplayCard: some View {
@@ -354,7 +396,9 @@ struct DashboardView: View {
                     .onChange(of: isBACFocused) { focused in
                         brain.isInputFocused = focused
                         if !focused {
-                            brain.applyTargetBACFromInput()
+                            // Only reset display — don't auto-trigger prediction
+                            // Prediction should only happen via the explicit "Predict Volume" button
+                            brain.syncSimulation()
                         }
                     }
                     
@@ -705,11 +749,11 @@ struct DashboardView: View {
                 
                 VStack(alignment: .leading, spacing: 12) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("SESSION TOTAL")
+                        Text("SESSION INTAKE")
                             .font(.system(size: 11, design: .monospaced))
                             .tracking(2.0)
                             .opacity(0.4)
-                        Text("总计摄入")
+                        Text("本次摄入")
                             .font(.system(size: 12, weight: .medium, design: .monospaced))
                             .foregroundColor(.primary.opacity(0.9))
                     }
@@ -722,9 +766,6 @@ struct DashboardView: View {
                         Text("ml")
                             .font(.system(size: 14, weight: .bold, design: .monospaced))
                             .foregroundColor(.primary)
-                        Text("本次摄入 / TOTAL INTAKE")
-                            .font(.system(size: 11, design: .monospaced))
-                            .foregroundColor(.onSurface.opacity(0.6))
                     }
                 }
             }
@@ -868,13 +909,22 @@ struct CurveView: View {
                     .textCase(.uppercase)
                     .foregroundColor(.primary.opacity(0.9))
                 
-                if brain.bacPercentage > brain.country.duiLimit {
-                    let timeToLegal = (brain.bacPercentage - brain.country.duiLimit) / brain.metabolicRate.value
-                    let hours = Int(timeToLegal)
-                    let minutes = Int((timeToLegal - Double(hours)) * 60)
-                    Text("\(hours)h \(minutes)m")
-                        .font(.system(size: 18, weight: .semibold, design: .monospaced))
-                        .foregroundColor(.warning)
+                if let safeDate = brain.safeDate, Date.now < safeDate {
+                    TimelineView(.periodic(from: .now, by: 1.0)) { context in
+                        let remaining = safeDate.timeIntervalSince(context.date)
+                        if remaining > 0 {
+                            let h = Int(remaining) / 3600
+                            let m = Int(remaining) % 3600 / 60
+                            let s = Int(remaining) % 60
+                            Text("\(h)h \(m)m \(s)s")
+                                .font(.system(size: 18, weight: .semibold, design: .monospaced))
+                                .foregroundColor(.warning)
+                        } else {
+                            Text("已达标 / Safe")
+                                .font(.system(size: 18, weight: .semibold, design: .monospaced))
+                                .foregroundColor(.onSurface.opacity(0.6))
+                        }
+                    }
                 } else {
                     Text("已达标 / Safe")
                         .font(.system(size: 18, weight: .semibold, design: .monospaced))
@@ -897,7 +947,7 @@ struct CurveView: View {
                 
                 VStack(alignment: .leading, spacing: 12) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("总摄入 / TOTAL INTAKE")
+                        Text("本次摄入 / SESSION INTAKE")
                             .font(.system(size: 12, weight: .medium, design: .monospaced))
                             .tracking(2.0)
                             .foregroundColor(.primary.opacity(0.9))
@@ -931,9 +981,8 @@ struct CurveView: View {
                             .foregroundColor(.primary.opacity(0.9))
                     }
                     
-                    if let session = brain.activeSession,
-                       let startTime = session.startTime {
-                        Text(startTime.formatted(date: .omitted, time: .shortened))
+                    if let peakTime = brain.peakBACTime {
+                        Text(peakTime.formatted(date: .omitted, time: .shortened))
                             .font(.system(size: 18, design: .monospaced))
                             .foregroundColor(.onSurface)
                     } else {
@@ -1038,7 +1087,7 @@ struct EnhancedCurveChartCard: View {
                 RuleMark(y: .value("Golden Point", 0.05))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [6, 4]))
                     .foregroundStyle(Color.primary.opacity(0.4))
-                    .annotation(position: .top, alignment: .trailing) {
+                    .annotation(position: .bottom, alignment: .trailing) {
                         HStack(spacing: 4) {
                             Image(systemName: "star.fill")
                                 .font(.system(size: 8))
@@ -1048,7 +1097,7 @@ struct EnhancedCurveChartCard: View {
                                 .foregroundColor(.primary)
                         }
                         .padding(.trailing, 4)
-                        .padding(.bottom, 2)
+                        .padding(.top, 2)
                     }
                 
                 RuleMark(y: .value("DUI", brain.country.duiLimit))
@@ -1056,8 +1105,8 @@ struct EnhancedCurveChartCard: View {
                     .foregroundStyle(Color.warning.opacity(0.5))
                     .annotation(position: .top, alignment: .trailing) {
                         HStack(spacing: 6) {
-                            Text("\(brain.country.flag) \(brain.country.name) DUI")
-                                .font(.system(size: 11, weight: .bold, design: .monospaced))
+                            Text("\(brain.country.flag) \(brain.country.displayBilingualName) DUI")
+                                .font(.system(size: 10, weight: .bold, design: .monospaced))
                             Text(String(format: "%.3f%%", brain.country.duiLimit))
                                 .font(.system(size: 11, design: .monospaced))
                         }
@@ -1072,8 +1121,8 @@ struct EnhancedCurveChartCard: View {
                         .foregroundStyle(Color.error.opacity(0.5))
                         .annotation(position: .top, alignment: .trailing) {
                             HStack(spacing: 6) {
-                                Text("\(brain.country.name) DWI")
-                                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+                                Text("\(brain.country.displayBilingualName) DWI")
+                                    .font(.system(size: 10, weight: .bold, design: .monospaced))
                                 Text(String(format: "%.3f%%", dwiLimit))
                                     .font(.system(size: 11, design: .monospaced))
                             }
@@ -1263,6 +1312,10 @@ struct HistoryHeatMapGrid: View {
         return data
     }
     
+    private var annualAlcoholGrams: Double {
+        dailyAlcoholData.values.reduce(0, +)
+    }
+    
     private func getIntensityLevel(for grams: Double) -> Int {
         if grams <= 0 { return 0 }
         if grams < 20 { return 1 }
@@ -1366,6 +1419,26 @@ struct HistoryHeatMapGrid: View {
                 Text("酣畅 / HEAVY")
                     .font(.system(size: 8, design: .monospaced))
                     .foregroundColor(.onSurfaceVariant.opacity(0.4))
+            }
+            
+            Divider().background(Color.white.opacity(0.05)).padding(.vertical, 8)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text("年度总量 / ANNUAL INTENSITY")
+                    .font(.system(size: 10, design: .monospaced))
+                    .tracking(1.5)
+                    .foregroundColor(.onSurfaceVariant.opacity(0.5))
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text("\(Int(annualAlcoholGrams))")
+                        .font(.system(size: 20, weight: .bold, design: .monospaced))
+                    Text("g")
+                        .font(.system(size: 12, design: .monospaced))
+                        .foregroundColor(.onSurfaceVariant.opacity(0.6))
+                    Text("预计纯酒精 / EST. PURE ALCOHOL")
+                        .font(.system(size: 9, design: .monospaced))
+                        .foregroundColor(.primary.opacity(0.6))
+                        .padding(.leading, 8)
+                }
             }
         }
         .padding(24)
@@ -1545,7 +1618,7 @@ struct SwipeToDeleteCard: View {
 }
 
 struct HistorySessionCard: View {
-    var session: DrinkSession
+    @ObservedObject var session: DrinkSession
     @ObservedObject var brain: AlcoholBrain
     @ObservedObject var userSettings: UserSettings
     let onShare: () -> Void
@@ -1761,6 +1834,7 @@ struct SettingsView: View {
     @ObservedObject var brain: AlcoholBrain
     @State private var showAboutSheet = false
     @State private var showPrivacySheet = false
+    @State private var showPhilosophySheet = false
     
     var body: some View {
         ZStack {
@@ -1773,7 +1847,7 @@ struct SettingsView: View {
                         SettingsPersonaSection(userSettings: userSettings, brain: brain)
                         SettingsBiometricsSection(userSettings: userSettings, brain: brain)
                         SettingsMetabolismSection(userSettings: userSettings, brain: brain)
-                        SettingsFooterView(userSettings: userSettings, showAboutSheet: $showAboutSheet, showPrivacySheet: $showPrivacySheet)
+                        SettingsFooterView(userSettings: userSettings, showAboutSheet: $showAboutSheet, showPrivacySheet: $showPrivacySheet, showPhilosophySheet: $showPhilosophySheet)
                     }
                 }
                 .padding(.horizontal, 24)
@@ -1785,6 +1859,9 @@ struct SettingsView: View {
         }
         .sheet(isPresented: $showPrivacySheet) {
             PrivacyView()
+        }
+        .sheet(isPresented: $showPhilosophySheet) {
+            PhilosophyView()
         }
     }
 }
@@ -2051,12 +2128,12 @@ struct SettingsJurisdictionSection: View {
                         .foregroundColor(.primary.opacity(0.6))
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(userSettings.selectedCountry.name)
-                            .font(.system(size: 16, weight: .semibold, design: .monospaced))
+                        Text(userSettings.selectedCountry.displayBilingualName)
+                            .font(.system(size: 14, weight: .semibold, design: .monospaced))
                             .foregroundColor(.primary)
-                        Text("\(userSettings.selectedCountry.flag) \(userSettings.selectedCountry.duiLimitString)")
+                        Text(userSettings.selectedCountry.duiLimitDisplayString)
                             .font(.system(size: 11, design: .monospaced))
-                            .foregroundColor(.onSurfaceVariant.opacity(0.6))
+                            .foregroundColor(userSettings.selectedCountry.isProhibition ? .error : .onSurfaceVariant.opacity(0.6))
                     }
                     
                     Spacer()
@@ -2074,13 +2151,23 @@ struct SettingsJurisdictionSection: View {
                 
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("醉酒驾驶 / DRUNK DRIVING")
-                            .font(.system(size: 11, weight: .medium, design: .monospaced))
-                            .tracking(2.0)
-                            .foregroundColor(.primary.opacity(0.9))
-                        Text(String(format: "%.3f%%", userSettings.selectedCountry.duiLimit))
-                            .font(.system(size: 14, weight: .bold, design: .monospaced))
-                            .foregroundColor(.warning)
+                        if userSettings.selectedCountry.isProhibition {
+                            Text("法律状态 / LEGAL STATUS")
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .tracking(2.0)
+                                .foregroundColor(.error.opacity(0.9))
+                            Text("禁酒 / Prohibited")
+                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                .foregroundColor(.error)
+                        } else {
+                            Text("醉酒驾驶 / DRUNK DRIVING")
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .tracking(2.0)
+                                .foregroundColor(.primary.opacity(0.9))
+                            Text(String(format: "%.3f%%", userSettings.selectedCountry.duiLimit))
+                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                .foregroundColor(.warning)
+                        }
                     }
                     
                     Spacer()
@@ -2116,24 +2203,31 @@ struct SettingsJurisdictionSection: View {
 struct CountryPickerSheet: View {
     @Binding var selectedCountry: String
     @Environment(\.dismiss) private var dismiss
+    @State private var showingProhibitionAlert = false
+    @State private var pendingCountry: CountryLaw?
     
     var body: some View {
         NavigationStack {
             List(CountryLaw.allCountries, id: \.name) { country in
                 Button(action: {
-                    selectedCountry = country.name
-                    dismiss()
+                    if country.isProhibition {
+                        pendingCountry = country
+                        showingProhibitionAlert = true
+                    } else {
+                        selectedCountry = country.name
+                        dismiss()
+                    }
                 }) {
                     HStack(spacing: 12) {
                         Text(country.flag)
                             .font(.title2)
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(country.name)
+                            Text(country.displayBilingualName)
                                 .font(.system(size: 14, weight: .medium, design: .monospaced))
                                 .foregroundColor(selectedCountry == country.name ? .primary : .onSurface)
-                            Text(country.duiLimitString)
+                            Text(country.duiLimitDisplayString)
                                 .font(.system(size: 11, design: .monospaced))
-                                .foregroundColor(.onSurfaceVariant.opacity(0.6))
+                                .foregroundColor(country.isProhibition ? .error.opacity(0.8) : .onSurfaceVariant.opacity(0.6))
                         }
                         Spacer()
                         if selectedCountry == country.name {
@@ -2146,6 +2240,16 @@ struct CountryPickerSheet: View {
             }
             .navigationTitle("选择国家 / Select Country")
             .navigationBarTitleDisplayMode(.inline)
+        }
+        .alert("法律合规提示 / Legal Compliance", isPresented: $showingProhibitionAlert) {
+            Button("我已了解 / I Understand", role: .cancel) {
+                if let country = pendingCountry {
+                    selectedCountry = country.name
+                    dismiss()
+                }
+            }
+        } message: {
+            Text("酒精在该地区受法律禁止，请务必遵守当地法律法规。\n\nAlcohol is prohibited in this region. Please comply with local laws and regulations.")
         }
     }
 }
@@ -2214,12 +2318,13 @@ struct SettingsFooterView: View {
     @ObservedObject var userSettings: UserSettings
     @Binding var showAboutSheet: Bool
     @Binding var showPrivacySheet: Bool
+    @Binding var showPhilosophySheet: Bool
     
     var body: some View {
         VStack(spacing: 24) {
             Divider().background(Color.white.opacity(0.06))
             
-            Text("Version 2.2")
+            Text("Version 1.0.0")
                 .font(.system(size: 10, design: .monospaced))
                 .tracking(4.0)
                 .opacity(0.4)
@@ -2287,20 +2392,28 @@ struct SettingsFooterView: View {
             
             // Links
             HStack(spacing: 24) {
-                Link("Our Philosophy", destination: URL(string: "#")!)
-                    .font(.system(size: 11, design: .monospaced))
-                    .foregroundColor(.onSurfaceVariant.opacity(0.6))
+                Button(action: { showPhilosophySheet = true }) {
+                    Text("微醺哲学 Our Philosophy")
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundColor(.onSurfaceVariant.opacity(0.6))
+                }
                 
                 Button(action: { showPrivacySheet = true }) {
-                    Text("Privacy Policy")
+                    Text("隐私政策 Privacy Policy")
                         .font(.system(size: 11, design: .monospaced))
                         .foregroundColor(.onSurfaceVariant.opacity(0.6))
                 }
             }
             
-            Text("\"In vino veritas, in aqua sanitas.\"")
-                .font(.system(size: 14, weight: .regular, design: .serif).italic())
-                .foregroundColor(.onSurfaceVariant.opacity(0.5))
+            VStack(spacing: 4) {
+                Text("“酒以见性，水以养生”")
+                    .font(.system(size: 13, weight: .medium, design: .serif))
+                    .foregroundColor(.onSurfaceVariant.opacity(0.6))
+                
+                Text("\"In vino veritas, in aqua sanitas.\"")
+                    .font(.system(size: 11, weight: .regular, design: .serif).italic())
+                    .foregroundColor(.onSurfaceVariant.opacity(0.4))
+            }
         }
         .padding(.vertical, 32)
     }
@@ -2317,16 +2430,18 @@ struct AboutDrukSheet: View {
                 Spacer()
                 
                 VStack(spacing: 20) {
-                    Image("whiskey_glass")
+                    Image("brand_logo")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 80, height: 80)
+                        .cornerRadius(18)
+                        .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
                     
                     Text("Druk")
                         .font(.system(size: 32, weight: .bold, design: .serif).italic())
                         .foregroundColor(.primary)
                     
-                    Text("Version 2.2")
+                    Text("V1.0.0")
                         .font(.system(size: 12, design: .monospaced))
                         .tracking(2.0)
                         .foregroundColor(.onSurfaceVariant.opacity(0.5))

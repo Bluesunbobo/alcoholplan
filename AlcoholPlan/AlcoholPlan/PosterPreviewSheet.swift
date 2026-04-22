@@ -131,16 +131,23 @@ struct PosterPreviewSheet: View {
         guard selectedIndex < images.count else { return }
         let activityVC = UIActivityViewController(activityItems: [images[selectedIndex]], applicationActivities: nil)
         
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootVC = windowScene.windows.first?.rootViewController {
-            
+        // Find the top-most view controller to present from
+        var topVC = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }?.rootViewController
+        
+        while let presentedVC = topVC?.presentedViewController {
+            topVC = presentedVC
+        }
+        
+        if let controller = topVC {
             if let popover = activityVC.popoverPresentationController {
-                popover.sourceView = rootVC.view
-                popover.sourceRect = CGRect(x: rootVC.view.bounds.midX, y: rootVC.view.bounds.midY, width: 0, height: 0)
+                popover.sourceView = controller.view
+                popover.sourceRect = CGRect(x: controller.view.bounds.midX, y: controller.view.bounds.midY, width: 0, height: 0)
                 popover.permittedArrowDirections = []
             }
-            
-            rootVC.present(activityVC, animated: true)
+            controller.present(activityVC, animated: true)
         }
     }
 }

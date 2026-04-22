@@ -21,6 +21,7 @@ struct CountryLaw: Identifiable, Hashable {
     let flag: String
     let duiLimit: Double // 酒后驾驶标准 BAC %
     let dwiLimit: Double? // 醉酒驾驶标准 BAC % (如果有)
+    let isProhibition: Bool // 是否法律禁酒
     
     var isZeroTolerance: Bool { duiLimit <= 0.01 }
     
@@ -28,24 +29,33 @@ struct CountryLaw: Identifiable, Hashable {
         return String(format: "DUI %.3f%%", duiLimit)
     }
     
+    var duiLimitDisplayString: String {
+        if isProhibition { return "禁酒 / Prohibited" }
+        return String(format: "DUI %.3f%%", duiLimit)
+    }
+    
+    var displayBilingualName: String {
+        "\(name) / \(enName)"
+    }
+    
     static let allCountries: [CountryLaw] = [
-        CountryLaw(name: "中国", enName: "China", flag: "🇨🇳", duiLimit: 0.02, dwiLimit: 0.08),
-        CountryLaw(name: "丹麦", enName: "Denmark", flag: "🇩🇰", duiLimit: 0.05, dwiLimit: nil),
-        CountryLaw(name: "德国", enName: "Germany", flag: "🇩🇪", duiLimit: 0.05, dwiLimit: nil),
-        CountryLaw(name: "法国", enName: "France", flag: "🇫🇷", duiLimit: 0.05, dwiLimit: nil),
-        CountryLaw(name: "意大利", enName: "Italy", flag: "🇮🇹", duiLimit: 0.05, dwiLimit: nil),
-        CountryLaw(name: "西班牙", enName: "Spain", flag: "🇪🇸", duiLimit: 0.05, dwiLimit: nil),
-        CountryLaw(name: "英国", enName: "UK", flag: "🇬🇧", duiLimit: 0.08, dwiLimit: nil),
-        CountryLaw(name: "美国", enName: "USA", flag: "🇺🇸", duiLimit: 0.08, dwiLimit: nil),
-        CountryLaw(name: "加拿大", enName: "Canada", flag: "🇨🇦", duiLimit: 0.05, dwiLimit: 0.08),
-        CountryLaw(name: "澳大利亚", enName: "Australia", flag: "🇦🇺", duiLimit: 0.05, dwiLimit: nil),
-        CountryLaw(name: "日本", enName: "Japan", flag: "🇯🇵", duiLimit: 0.03, dwiLimit: nil),
-        CountryLaw(name: "韩国", enName: "South Korea", flag: "🇰🇷", duiLimit: 0.03, dwiLimit: nil),
-        CountryLaw(name: "俄罗斯", enName: "Russia", flag: "🇷🇺", duiLimit: 0.03, dwiLimit: nil),
-        CountryLaw(name: "挪威", enName: "Norway", flag: "🇳🇴", duiLimit: 0.02, dwiLimit: nil),
-        CountryLaw(name: "瑞典", enName: "Sweden", flag: "🇸🇪", duiLimit: 0.02, dwiLimit: nil),
-        CountryLaw(name: "捷克", enName: "Czechia", flag: "🇨🇿", duiLimit: 0.001, dwiLimit: nil),
-        CountryLaw(name: "沙特", enName: "Saudi Arabia", flag: "🇸🇦", duiLimit: 0.001, dwiLimit: nil)
+        CountryLaw(name: "中国", enName: "China", flag: "🇨🇳", duiLimit: 0.02, dwiLimit: 0.08, isProhibition: false),
+        CountryLaw(name: "丹麦", enName: "Denmark", flag: "🇩🇰", duiLimit: 0.05, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "德国", enName: "Germany", flag: "🇩🇪", duiLimit: 0.05, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "法国", enName: "France", flag: "🇫🇷", duiLimit: 0.05, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "意大利", enName: "Italy", flag: "🇮🇹", duiLimit: 0.05, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "西班牙", enName: "Spain", flag: "🇪🇸", duiLimit: 0.05, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "英国", enName: "UK", flag: "🇬🇧", duiLimit: 0.08, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "美国", enName: "USA", flag: "🇺🇸", duiLimit: 0.08, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "加拿大", enName: "Canada", flag: "🇨🇦", duiLimit: 0.05, dwiLimit: 0.08, isProhibition: false),
+        CountryLaw(name: "澳大利亚", enName: "Australia", flag: "🇦🇺", duiLimit: 0.05, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "日本", enName: "Japan", flag: "🇯🇵", duiLimit: 0.03, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "韩国", enName: "South Korea", flag: "🇰🇷", duiLimit: 0.03, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "俄罗斯", enName: "Russia", flag: "🇷🇺", duiLimit: 0.03, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "挪威", enName: "Norway", flag: "🇳🇴", duiLimit: 0.02, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "瑞典", enName: "Sweden", flag: "🇸🇪", duiLimit: 0.02, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "捷克", enName: "Czechia", flag: "🇨🇿", duiLimit: 0.0, dwiLimit: nil, isProhibition: false),
+        CountryLaw(name: "沙特", enName: "Saudi Arabia", flag: "🇸🇦", duiLimit: 0.0, dwiLimit: nil, isProhibition: true)
     ]
     
     static let `default` = allCountries[0] // 中国 default
