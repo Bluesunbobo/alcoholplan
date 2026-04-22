@@ -15,10 +15,10 @@
                         background: '#161310',
                         surface: '#1e1b18',
                         textPrimary: '#e9e1dc',
-                        textSecondary: '#d6c3b1'
+                        textSecondary: '#8C7B6B'
                     },
                     fontFamily: {
-                        serif: ['Georgia', 'serif'],
+                        serif: ['Georgia', 'Times New Roman', 'serif'],
                         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
                     }
                 }
@@ -27,123 +27,122 @@
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
-            .glass-card {
-                @apply bg-surface/60 backdrop-blur-md border border-white/5 rounded-3xl p-8 mb-8;
+            .section-bar {
+                @apply border-l-2 border-primary pl-4 mb-6 py-1;
             }
             .section-title {
-                @apply text-primary font-mono text-xs font-bold tracking-widest uppercase mb-4 flex items-center gap-2;
+                @apply text-primary font-serif italic text-xl mb-1;
+            }
+            .section-subtitle {
+                @apply text-primary/60 font-serif italic text-xs uppercase tracking-wider mb-4;
             }
             .content-zh {
-                @apply text-base text-textPrimary leading-relaxed mb-4;
+                @apply text-[15px] text-textPrimary leading-relaxed mb-3;
             }
             .content-en {
-                @apply text-sm text-textSecondary italic leading-relaxed mb-6 font-serif;
+                @apply text-[13px] text-textSecondary italic leading-relaxed mb-8 font-serif;
+            }
+            .bullet-list {
+                @apply list-none pl-1;
+            }
+            .bullet-item {
+                @apply flex items-start gap-2 mb-2;
+            }
+            .bullet-dot {
+                @apply w-1 h-1 bg-textSecondary rounded-full mt-2 shrink-0;
             }
         }
     </style>
 </head>
 <body class="bg-background text-textPrimary selection:bg-primary selection:text-background min-h-screen">
-    <div class="max-w-3xl mx-auto px-6 py-16">
-        <!-- Header -->
-        <header class="text-center mb-16">
-            <h1 class="text-5xl font-serif italic mb-4">Druk</h1>
-            <p class="font-mono text-xs tracking-[0.2em] text-textSecondary uppercase">Privacy Policy / 隐私政策</p>
-            <div class="w-12 h-px bg-primary/30 mx-auto mt-8"></div>
+    <div class="max-w-2xl mx-auto px-8 py-20">
+        
+        <!-- Header: Mirroring Original Image Branding -->
+        <header class="text-center mb-24">
+            <div class="mb-10 inline-block p-1 bg-surface border border-white/10 rounded-2xl shadow-2xl">
+                <img src="icon.png" alt="Druk Icon" class="w-20 h-20 rounded-xl shadow-inner">
+            </div>
+            <h1 class="text-4xl font-serif italic text-primary mb-3">Druk 微醺志</h1>
+            <p class="font-mono text-[10px] tracking-[0.4em] text-textSecondary uppercase opacity-60">PRIVACY & PHILOSOPHY</p>
         </header>
 
-        <!-- Section 1 -->
-        <div class="glass-card">
-            <div class="section-title">
-                <span class="w-2 h-2 bg-primary rounded-full"></span>
-                Data Storage / 数据本地存储
+        <!-- Intro -->
+        <section class="mb-20">
+            <div class="section-bar">
+                <h2 class="section-title">隐私政策</h2>
+                <div class="section-subtitle">Privacy Policy</div>
             </div>
-            <div class="content-zh">
-                <strong>微醺志是一款纯本地工具。</strong> App 内所有摄入记录及配置数据均仅存储在本地设备（Core Data）中。
-            </div>
-            <div class="content-en">
-                <strong>Druk is a local-only utility tool.</strong> All records and profile data are stored ONLY on your local device.
-            </div>
-        </div>
+            <p class="content-zh">微醺志（Druk）是一款注重隐私的应用。我们相信，您的饮酒数据和心境记录纯属私密。本政策说明了我们如何处理您的数据。</p>
+            <p class="content-en">Druk is a privacy-focused app. We believe your drinking data and mood records are purely private. This policy explains how we handle your data.</p>
+        </section>
 
-        <!-- Section 2 -->
-        <div class="glass-card">
-            <div class="section-title">
-                <span class="w-2 h-2 bg-primary rounded-full"></span>
-                No Data Collection / 不收集个人数据
+        <!-- 1. Data Localization -->
+        <section class="mb-16">
+            <div class="section-bar">
+                <h2 class="section-title text-base">数据本地化</h2>
+                <div class="section-subtitle !text-[10px]">Local-First</div>
             </div>
-            <div class="content-zh">
-                我们不会收集、存储或传输任何个人信息。我们不使用任何第三方分析追踪。
-            </div>
-            <div class="content-en">
-                We DO NOT collect, store, or transmit any personal information. No 3rd-party tracking.
-            </div>
-        </div>
+            <p class="content-zh">您的所有数据均仅保存在您设备的本地数据库中。我们不提供任何云端同步服务，数据绝不会离开您的设备。</p>
+            <p class="content-en">All data is stored exclusively on your local device. We offer no cloud sync; your data never leaves your device.</p>
+            <ul class="bullet-list">
+                <li class="bullet-item">
+                    <span class="bullet-dot"></span>
+                    <span class="content-zh">不要求注册或登录。</span>
+                </li>
+                <li class="bullet-item">
+                    <span class="bullet-dot"></span>
+                    <span class="content-en">No registration or login required.</span>
+                </li>
+            </ul>
+        </section>
 
-        <!-- Section 3 -->
-        <div class="glass-card">
-            <div class="section-title text-primary/80">
-                <span class="w-2 h-2 bg-primary rounded-full"></span>
-                No Account System / 无账号体系说明
+        <!-- 2. No Data Collection -->
+        <section class="mb-16">
+            <div class="section-bar">
+                <h2 class="section-title text-base">不收集个人信息</h2>
+                <div class="section-subtitle !text-[10px]">No Data Collection</div>
             </div>
-            <div class="content-zh">
-                本应用无账号登录体系。不涉及账号注销。卸载 App 即可彻底销毁本地所有数据。
-            </div>
-            <div class="content-en">
-                No account system. No account deletion needed. All local data is destroyed upon uninstallation.
-            </div>
-        </div>
+            <p class="content-zh">我们不会收集、存储或传输任何个人身份信息。本应用不包含任何第三方追踪或广告 SDK。</p>
+            <p class="content-en">We DO NOT collect, store, or transmit any personally identifiable information. No 3rd-party tracking or ads.</p>
+        </section>
 
-        <!-- Section 4 -->
-        <div class="glass-card">
-            <div class="section-title text-primary/80">
-                <span class="w-2 h-2 bg-primary rounded-full"></span>
-                Content Sharing & Photos / 内容分享与相册
+        <!-- 3. Photo Library -->
+        <section class="mb-16">
+            <div class="section-bar">
+                <h2 class="section-title text-base">相册与媒体</h2>
+                <div class="section-subtitle !text-[10px]">Photo Library</div>
             </div>
-            <div class="content-zh">
-                相册权限仅用于保存生成的微醺海报。我们不会读取或访问您的已有照片。分享过程通过 iOS 系统原生组件完成。
-            </div>
-            <div class="content-en">
-                Photo permissions are only for saving posters. We do not read or access your existing photos. Sharing is handled by iOS components.
-            </div>
-        </div>
+            <p class="content-zh">相册权限仅用于保存生成的分享海报。我们不会读取或访问您的已有照片。</p>
+            <p class="content-en">Photo library access is ONLY for saving your posters. We do not read or access your existing photos.</p>
+        </section>
 
-        <!-- Section 5 -->
-        <div class="glass-card border-error/20">
-            <div class="section-title text-error/90">
-                <span class="w-2 h-2 bg-error rounded-full"></span>
-                Regional Jurisdictions / 地区法律标准
+        <!-- 4. Account System -->
+        <section class="mb-16">
+            <div class="section-bar border-primary/20">
+                <h2 class="section-title text-base opacity-70">无账号体系</h2>
+                <div class="section-subtitle !text-[10px]">No Account System</div>
             </div>
-            <div class="content-zh">
-                App 包含多国法律数据库，并针对禁酒地区提供强制性警示。使用即表示您同意遵守当地法规。
-            </div>
-            <div class="content-en">
-                Includes built-in database for multi-country standards, with specific mandatory warnings for prohibited regions.
-            </div>
-        </div>
+            <p class="content-zh">本应用无账号注册体系。不涉及账号注销。卸载 App 即可彻底销毁本地所有数据。</p>
+            <p class="content-en">No account system. No account deletion needed. All data is destroyed upon uninstallation.</p>
+        </section>
 
-        <!-- Section 6 -->
-        <div class="glass-card">
-            <div class="section-title">
-                <span class="w-2 h-2 bg-primary rounded-full"></span>
-                Age Requirement / 年龄要求
+        <!-- 5. Legal Compliance -->
+        <section class="mb-16 bg-surface/30 p-6 rounded-2xl border border-white/5 backdrop-blur-sm">
+            <div class="section-bar border-error">
+                <h2 class="section-title text-base text-error">法律合规</h2>
+                <div class="section-subtitle !text-[10px] text-error/60">Legal Compliance</div>
             </div>
-            <div class="content-zh">
-                本应用仅限已达到法定饮酒年龄（18+）的成年人使用。
-            </div>
-            <div class="content-en">
-                This app is strictly for adults (18+). No data from minors.
-            </div>
-        </div>
+            <p class="content-zh !mb-2">内置多国法律标准，并针对禁酒地区提供强制性警示。使用即表示您同意遵守当地法规。</p>
+            <p class="content-en !mb-0 text-textSecondary/60">Multi-country standards included, with specific warnings for prohibited regions. Usage implies compliance.</p>
+        </section>
 
-        <!-- Contact -->
-        <footer class="text-center mt-20 pb-10">
-            <div class="section-title justify-center">Contact Us / 联系我们</div>
-            <a href="mailto:bestskillz2000@gmail.com" class="text-textSecondary hover:text-primary transition-colors font-serif italic text-lg">
-                bestskillz2000@gmail.com
-            </a>
-            <p class="mt-12 text-[10px] font-mono text-textSecondary/40 tracking-widest">
-                “Another Round, Another Responsibility.”
-            </p>
+        <!-- Footer -->
+        <footer class="mt-32 pt-16 border-t border-white/5 text-center">
+            <p class="font-serif italic text-primary/80 mb-2">Another Round, Another Responsibility.</p>
+            <p class="text-[10px] font-mono tracking-widest text-textSecondary opacity-40 uppercase">Druk Development Team</p>
+            <div class="mt-8">
+                <a href="mailto:bestskillz2000@gmail.com" class="text-xs text-textSecondary hover:text-primary transition-colors border-b border-primary/30 pb-0.5">bestskillz2000@gmail.com</a>
+            </div>
         </footer>
     </div>
 </body>
