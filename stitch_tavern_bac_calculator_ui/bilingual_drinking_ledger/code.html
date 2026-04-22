@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Druk - Drinking History</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#d6c3b1",
+                        "on-tertiary": "#680017",
+                        "primary-container": "#c8862a",
+                        "on-background": "#e9e1dc",
+                        "surface-dim": "#161310",
+                        "primary-fixed": "#ffddb8",
+                        "primary-fixed-dim": "#ffb960",
+                        "surface-tint": "#ffb960",
+                        "on-surface": "#e9e1dc",
+                        "on-tertiary-container": "#610015",
+                        "surface-container": "#231f1c",
+                        "on-primary-fixed": "#2b1700",
+                        "outline-variant": "#514536",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#3d3835",
+                        "secondary-fixed-dim": "#cfc6b3",
+                        "on-primary-fixed-variant": "#653e00",
+                        "tertiary-fixed-dim": "#ffb3b4",
+                        "secondary": "#cfc6b3",
+                        "on-error-container": "#ffdad6",
+                        "error-container": "#93000a",
+                        "on-error": "#690005",
+                        "outline": "#9f8e7d",
+                        "surface-container-lowest": "#110e0b",
+                        "on-secondary-fixed": "#1f1b10",
+                        "on-tertiary-fixed": "#40000b",
+                        "surface-container-low": "#1e1b18",
+                        "surface": "#161310",
+                        "inverse-surface": "#e9e1dc",
+                        "background": "#161310",
+                        "inverse-primary": "#865300",
+                        "on-secondary-fixed-variant": "#4c4638",
+                        "tertiary-container": "#f16771",
+                        "secondary-container": "#4c4638",
+                        "on-secondary": "#353023",
+                        "inverse-on-surface": "#34302d",
+                        "surface-container-highest": "#383431",
+                        "on-primary-container": "#422700",
+                        "surface-container-high": "#2d2927",
+                        "primary": "#ffb960",
+                        "tertiary": "#ffb3b4",
+                        "on-secondary-container": "#bdb4a3",
+                        "secondary-fixed": "#ebe1cf",
+                        "on-primary": "#472a00",
+                        "tertiary-fixed": "#ffdada",
+                        "on-tertiary-fixed-variant": "#8a192a",
+                        "surface-variant": "#383431"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Newsreader", "serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Space Grotesk", "monospace"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .heat-map-grid {
+            display: grid;
+            grid-template-columns: repeat(26, 1fr);
+            gap: 4px;
+        }
+        .heat-cell {
+            aspect-ratio: 1;
+            border-radius: 2px;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30 min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-[#161310]/40 backdrop-blur-xl bg-gradient-to-b from-[#1e1b18] to-transparent shadow-none">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a sophisticated man in a dimly lit cocktail bar, warm amber side lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4shDbKasQhlBat80TOw2LwWku67NkWCXsy56cxy21XbgEPn5H4NGmKD4BZsDEAsQQWoR0EkyfuyK26D45erVhl6R2t7YsJf4RLR32hIPHDDmlzIAA-Zo3drWSZx_ZRUwOeij5ZV7F-TLZXraB2j09ArMgZZoJMtcNQ1BhRzW4mMV-xdU9evwwMmPfaeayufE3ue4tjkl0VchVQfKU3RkbLhZoJ1b6NrFYCewtg4fKv8J0pRkDYS3A3mxtxoyLnCVqEuX4F1qTBUvh"/>
+</div>
+<span class="text-2xl font-headline italic text-[#ffb960]">Druk</span>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[#ffb960] text-2xl">settings_cinematic_blur</span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-2xl mx-auto">
+<!-- Editorial Header -->
+<section class="mb-10">
+<h1 class="font-headline italic text-4xl text-on-surface tracking-tight mb-2">你的那些夜晚 <span class="opacity-50 text-3xl">/ Your Nights</span></h1>
+<p class="font-headline italic text-xl text-on-surface-variant/60">Past Encounters</p>
+</section>
+<!-- GitHub Style Heat Map -->
+<section class="mb-12 p-6 rounded-xl bg-surface-container/40 backdrop-blur-xl border border-outline-variant/10">
+<div class="flex justify-between items-end mb-4">
+<h3 class="font-label text-[10px] tracking-widest uppercase text-on-surface-variant/60">2024 饮酒频率 / VINTAGE FREQUENCY</h3>
+<span class="font-label text-[10px] text-primary">156 场次 / SESSIONS</span>
+</div>
+<div class="heat-map-grid">
+<!-- Mocking heat map cells -->
+<div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/40"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/20"></div><div class="heat-cell bg-primary/60"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div>
+<div class="heat-cell bg-primary/5"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/80"></div><div class="heat-cell bg-primary/20"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/100"></div><div class="heat-cell bg-primary/10"></div>
+<div class="heat-cell bg-primary/30"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/50"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/20"></div>
+<div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/40"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div>
+<div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/60"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/20"></div><div class="heat-cell bg-primary/10"></div>
+<div class="heat-cell bg-primary/90"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div>
+<div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/20"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div>
+<div class="heat-cell bg-primary/40"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/70"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div>
+<div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/30"></div>
+<div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/50"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div>
+<div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/20"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/80"></div><div class="heat-cell bg-primary/10"></div>
+<div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/40"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div>
+<div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/20"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div><div class="heat-cell bg-primary/10"></div>
+</div>
+<div class="mt-4 flex justify-end gap-2 items-center">
+<span class="font-label text-[8px] text-on-surface-variant/40 uppercase">轻微 / LIGHT</span>
+<div class="flex gap-1">
+<div class="w-2 h-2 bg-primary/10"></div>
+<div class="w-2 h-2 bg-primary/40"></div>
+<div class="w-2 h-2 bg-primary/70"></div>
+<div class="w-2 h-2 bg-primary/100"></div>
+</div>
+<span class="font-label text-[8px] text-on-surface-variant/40 uppercase">酣畅 / HEAVY</span>
+</div>
+</section>
+<!-- Vertical Timeline -->
+<div class="relative space-y-12">
+<!-- Timeline Line -->
+<div class="absolute left-4 top-0 bottom-0 w-[1px] bg-gradient-to-b from-primary/40 via-primary/5 to-transparent"></div>
+<!-- Entry 1 -->
+<div class="relative pl-12">
+<div class="absolute left-[14px] top-4 w-2 h-2 rounded-full bg-primary border border-background shadow-[0_0_10px_rgba(255,185,96,0.5)]"></div>
+<div class="p-5 rounded-xl bg-surface-container-low backdrop-blur-md border border-outline-variant/5 shadow-xl hover:bg-surface-container transition-all duration-500 group">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="font-label text-xs text-primary/60 block mb-1">OCT 24, 2023</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label text-[10px] tracking-wider">朋友聚会</span>
+</div>
+<div class="text-right">
+<span class="font-label text-2xl text-primary block leading-none">0.065%</span>
+<span class="font-label text-[10px] text-on-surface-variant/40 uppercase">峰值 BAC / PEAK BAC</span>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">
+<span class="font-label text-[10px] text-on-surface-variant/60 tracking-widest uppercase">宿醉感 / Hangover</span>
+<div class="flex gap-1">
+<span class="text-lg grayscale-0">🥴</span>
+<span class="text-lg grayscale opacity-20">🥴</span>
+<span class="text-lg grayscale opacity-20">🥴</span>
+<span class="text-lg grayscale opacity-20">🥴</span>
+<span class="text-lg grayscale opacity-20">🥴</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Cinematic Quote 1 -->
+<div class="py-4 text-center px-4">
+<p class="font-headline italic text-on-surface-variant/50 text-base mb-1">"起初，你举杯饮酒；接着，酒杯反客为主；最后，酒将你彻底吞噬。"</p>
+<p class="font-headline italic text-on-surface-variant/30 text-sm">"First you take a drink, then the drink takes a drink, then the drink takes you."</p>
+<p class="font-label text-[8px] tracking-[0.2em] mt-2 uppercase opacity-30">— F. Scott Fitzgerald</p>
+</div>
+<!-- Entry 2 -->
+<div class="relative pl-12">
+<div class="absolute left-[14px] top-4 w-2 h-2 rounded-full bg-primary/40 border border-background"></div>
+<div class="p-5 rounded-xl bg-surface-container-low backdrop-blur-md border border-outline-variant/5 shadow-xl hover:bg-surface-container transition-all duration-500 group">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="font-label text-xs text-primary/60 block mb-1">OCT 21, 2023</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label text-[10px] tracking-wider">朋友聚会</span>
+</div>
+<div class="text-right">
+<span class="font-label text-2xl text-primary block leading-none">0.042%</span>
+<span class="font-label text-[10px] text-on-surface-variant/40 uppercase">峰值 BAC / PEAK BAC</span>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">
+<span class="font-label text-[10px] text-on-surface-variant/60 tracking-widest uppercase">宿醉感 / Hangover</span>
+<div class="flex gap-1">
+<span class="text-lg grayscale-0">🥂</span>
+<span class="text-lg grayscale-0">🥂</span>
+<span class="text-lg grayscale opacity-20">🥂</span>
+<span class="text-lg grayscale opacity-20">🥂</span>
+<span class="text-lg grayscale opacity-20">🥂</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Cinematic Quote 2 -->
+<div class="py-4 text-center px-4">
+<p class="font-headline italic text-on-surface-variant/50 text-base mb-1">"酒中寻真理，水中得健康。"</p>
+<p class="font-headline italic text-on-surface-variant/30 text-sm">"In vino veritas, in aqua sanitas."</p>
+<p class="font-label text-[8px] tracking-[0.2em] mt-2 uppercase opacity-30">— Latin Proverb</p>
+</div>
+<!-- Entry 3 -->
+<div class="relative pl-12">
+<div class="absolute left-[14px] top-4 w-2 h-2 rounded-full bg-primary/40 border border-background"></div>
+<div class="p-5 rounded-xl bg-surface-container-low backdrop-blur-md border border-outline-variant/5 shadow-xl hover:bg-surface-container transition-all duration-500 group">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="font-label text-xs text-primary/60 block mb-1">OCT 18, 2023</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label text-[10px] tracking-wider">朋友聚会</span>
+</div>
+<div class="text-right">
+<span class="font-label text-2xl text-primary block leading-none">0.088%</span>
+<span class="font-label text-[10px] text-on-surface-variant/40 uppercase">峰值 BAC / PEAK BAC</span>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">
+<span class="font-label text-[10px] text-on-surface-variant/60 tracking-widest uppercase">宿醉感 / Hangover</span>
+<div class="flex gap-1">
+<span class="text-lg grayscale-0">💀</span>
+<span class="text-lg grayscale-0">💀</span>
+<span class="text-lg grayscale-0">💀</span>
+<span class="text-lg grayscale opacity-20">💀</span>
+<span class="text-lg grayscale opacity-20">💀</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full px-8 py-12 flex flex-col items-center gap-4 full-width pb-24 bg-transparent">
+<p class="font-headline italic text-sm text-center text-[#f0e6d3]/40">"酒中寻真理，水中得健康 / In vino veritas, in aqua sanitas."</p>
+<div class="flex gap-6">
+<a class="font-headline italic text-sm text-[#f0e6d3]/40 hover:text-[#ffb960]" href="#">我们的哲学 / Philosophy</a>
+<a class="font-headline italic text-sm text-[#f0e6d3]/40 hover:text-[#ffb960]" href="#">隐私 / Privacy</a>
+</div>
+</footer>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-4 bg-[#161310]/40 backdrop-blur-2xl docked full-width bottom-0 rounded-t-[2rem] border-t border-[#f0e6d3]/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+<div class="flex flex-col items-center justify-center text-[#f0e6d3] opacity-40 hover:opacity-80 transition-all duration-500">
+<span class="material-symbols-outlined mb-1">liquor</span>
+<span class="font-['Space_Grotesk'] text-[10px] tracking-widest uppercase">账本 / Ledger</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#f0e6d3] opacity-40 hover:opacity-80 transition-all duration-500">
+<span class="material-symbols-outlined mb-1">timeline</span>
+<span class="font-['Space_Grotesk'] text-[10px] tracking-widest uppercase">曲线 / Curve</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#ffb960] opacity-100 scale-110 hover:opacity-80 transition-all duration-500">
+<span class="material-symbols-outlined mb-1">history_edu</span>
+<span class="font-['Space_Grotesk'] text-[10px] tracking-widest uppercase">历史 / History</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#f0e6d3] opacity-40 hover:opacity-80 transition-all duration-500">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-['Space_Grotesk'] text-[10px] tracking-widest uppercase">个人 / Profile</span>
+</div>
+</nav>
+</body></html>
