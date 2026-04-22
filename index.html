@@ -48,19 +48,12 @@
             margin-bottom: 64px;
         }
 
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 32px;
-        }
-
         .logo {
             width: 120px;
             height: 120px;
             border-radius: 28px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            object-fit: cover;
+            margin-bottom: 32px;
         }
 
         h1 {
@@ -69,7 +62,6 @@
             font-style: italic;
             color: var(--primary);
             margin: 0 0 8px 0;
-            letter-spacing: -0.5px;
         }
 
         .version {
@@ -81,41 +73,37 @@
             text-transform: uppercase;
         }
 
+        /* Capsule Cards Style for legibility */
+        .policy-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
         h2 {
             font-family: 'Playfair Display', serif;
             font-size: 20px;
             font-style: italic;
             color: var(--primary);
-            margin-top: 56px;
-            margin-bottom: 16px;
-            border-left: 2px solid var(--primary);
-            padding-left: 16px;
+            margin-top: 0;
+            margin-bottom: 12px;
         }
 
         p {
             font-size: 15px;
             color: var(--on-surface-variant);
-            margin-bottom: 24px;
+            margin-bottom: 12px;
             font-weight: 300;
         }
 
         .en-text {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             font-style: italic;
-            opacity: 0.6;
+            opacity: 0.5;
             margin-top: 4px;
-        }
-
-        ul {
-            padding-left: 20px;
-            color: var(--on-surface-variant);
-            font-size: 15px;
-            font-weight: 300;
-        }
-
-        li {
-            margin-bottom: 12px;
         }
 
         .philosophy-section {
@@ -126,7 +114,6 @@
 
         .philosophy-title {
             text-align: center;
-            font-family: 'Inter', sans-serif;
             font-size: 12px;
             letter-spacing: 4px;
             color: var(--primary);
@@ -135,54 +122,16 @@
             text-transform: uppercase;
         }
 
-        .contact-me {
-            margin-top: 64px;
-            padding: 32px;
-            background: rgba(255, 185, 96, 0.03);
-            border-radius: 16px;
-            text-align: center;
-        }
-
-        .email {
-            font-family: monospace;
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 16px;
-            text-decoration: none;
-            letter-spacing: 1px;
-        }
-
         .footer-note {
             text-align: center;
             margin-top: 64px;
-            padding-top: 24px;
-        }
-
-        .signature {
-            font-family: 'Playfair Display', serif;
-            font-size: 18px;
-            font-style: italic;
-            color: var(--primary);
-            opacity: 0.7;
-            letter-spacing: 2px;
-        }
-
-        .ai-note {
-            font-size: 11px;
-            opacity: 0.3;
-            margin-top: 12px;
-            font-family: monospace;
+            opacity: 0.4;
+            font-size: 12px;
         }
 
         @media (max-width: 600px) {
-            .container {
-                margin: 0;
-                padding: 20px;
-            }
-            .glass-card {
-                padding: 32px 24px;
-                border-radius: 0;
-            }
+            .container { padding: 20px; }
+            .glass-card { padding: 32px 20px; border-radius: 0; }
         }
     </style>
 </head>
@@ -190,73 +139,59 @@
     <div class="container">
         <div class="glass-card">
             <header>
-                <div class="logo-container">
-                    <img src="icon.png" alt="Druk Logo" class="logo">
-                </div>
+                <img src="icon.png" alt="Druk Logo" class="logo">
                 <h1>Druk 微醺志</h1>
                 <div class="version">Privacy & Philosophy</div>
             </header>
 
-            <!-- Section 1: Privacy Policy -->
+            <!-- FULL COMPLIANCE CONTENT (7 SECTIONS) -->
             <section id="privacy">
-                <h2>隐私政策 <span class="en-text">Privacy Policy</span></h2>
-                <p>
-                    微醺志（Druk）是一款注重隐私的应用。我们相信，您的饮酒数据和心境记录纯属私密。本政策说明了我们如何处理您的数据。
-                    <span class="en-text">Druk is a privacy-focused app. We believe your drinking data and mood records are purely private. This policy explains how we handle your data.</span>
-                </p>
+                <div class="policy-section">
+                    <h2>1. 数据本地存储 <span class="en-text">Local Data Storage</span></h2>
+                    <p>摄入记录及配置数据均仅存储在本地设备（Core Data）中。数据绝不会离开您的设备。<span class="en-text">All intake records and profile data are stored exclusively on your local device. Data never leaves your device.</span></p>
+                </div>
 
-                <p>
-                    <strong>数据本地化：</strong>您的所有数据均仅保存在您设备的本地数据库中。我们不提供任何云端同步服务，数据绝不会离开您的设备。
-                    <span class="en-text">Local-First: All data is stored exclusively on your local device. We offer no cloud sync; your data never leaves your device.</span>
-                </p>
-                <ul>
-                    <li>不要求注册或登录。 <span class="en-text">No registration or login required.</span></li>
-                    <li>不收集个人身份信息。 <span class="en-text">No personal identity information collected.</span></li>
-                    <li>不包含第三方广告或追踪 SDK。 <span class="en-text">No 3rd-party ads or tracking SDKs.</span></li>
-                </ul>
+                <div class="policy-section">
+                    <h2>2. 不收集信息 <span class="en-text">No Data Collection</span></h2>
+                    <p>本 App 无需注册，不收集姓名、精确位置或唯一标识符。我们不使用任何第三方追踪。<span class="en-text">No registration required. No personal identity information collected. No 3rd-party tracking.</span></p>
+                </div>
+
+                <div class="policy-section">
+                    <h2>3. 无账号体系 <span class="en-text">No Account System</span></h2>
+                    <p>本应用无账号注册体系。不涉及账号注销。卸载 App 即可彻底销毁本地所有数据。<span class="en-text">No account system. No account deletion needed. All data is destroyed upon uninstallation.</span></p>
+                </div>
+
+                <div class="policy-section">
+                    <h2>4. 内容分享说明 <span class="en-text">Content Sharing</span></h2>
+                    <p>海报分享通过 iOS 系统组件完成，本 App 不托管、不分发用户内容。因此不涉及 UGC 举报机制。<span class="en-text">Sharing is handled by iOS. We do not host or distribute user content. No UGC reporting required.</span></p>
+                </div>
+
+                <div class="policy-section">
+                    <h2>5. 相册与媒体 <span class="en-text">Photo Library</span></h2>
+                    <p>相册权限仅用于保存生成的微醺海报。我们不会读取或访问您的已有照片。<span class="en-text">Permissions are only for saving posters. We do not read or access your existing photos.</span></p>
+                </div>
+
+                <div class="policy-section">
+                    <h2>6. 地区法律标准 <span class="en-text">Regional Jurisdictions</span></h2>
+                    <p>App 包含多国法律数据库，并针对禁酒地区提供强制性警示。使用即表示您同意遵守当地法规。<span class="en-text">Built-in database for multi-country standards, with specific warnings for prohibited regions.</span></p>
+                </div>
+
+                <div class="policy-section">
+                    <h2>7. 年龄要求 <span class="en-text">Age Requirement</span></h2>
+                    <p>本应用仅限已达到法定饮酒年龄（18+）的成年人使用。<span class="en-text">Strictly for adults (18+). No data from minors.</span></p>
+                </div>
             </section>
 
-            <!-- Section 2: Our Philosophy -->
+            <!-- PHILOSOPHY SECTION -->
             <section id="philosophy" class="philosophy-section">
                 <div class="philosophy-title">微醺哲学 / Philosophy</div>
-                
-                <p>
-                    <strong>寻找那 0.05% 的本真：</strong>
-                    电影《酒精计划》(Druk) 提出了一个迷人的假说：人类生来血液中就缺少 0.05% 的酒精浓度。这微小的差值，正是通往创造力与生命热情的“黄金点”。
-                    <span class="en-text">The movie "Another Round" (Druk) suggests a fascinating hypothesis: humans are born with a 0.05% alcohol deficit. This tiny margin is the "Gold Point" of creativity and passion.</span>
-                </p>
-
-                <p>
-                    <strong>镜鉴与警示：</strong>
-                    正如电影中四位教师的经历，酒精是一面镜子，映照出被生活磨平的少年意气，也可能成为溺毙理性的深渊。我设计微醺志，是为了在诗意与失控之间，留出一寸清醒的余地。辩证地看待酒精，是成年人在这复杂世界中寻找真实的修行。
-                    <span class="en-text">Like the teachers in the film, we see alcohol as a mirror reflecting youthful spirit but also a potential abyss for reason. Druk was designed to find that sliver of clarity between poetry and chaos. Managing this relationship is a modern journey towards authenticity.</span>
-                </p>
-
-                <p>
-                    <strong>喝了再写，醒了再改：</strong>
-                    人生亦即如此。我们并非追求沉沦，而是追求在科学的边界内，敢于面对真实的自我。
-                    <span class="en-text">Write drunk, edit sober. Such is life. We seek not to drown, but to face our authentic selves within scientific boundaries.</span>
-                </p>
+                <p><strong>寻找那 0.05% 的本真：</strong>电影《酒精计划》(Druk) 提出了一个迷人的假说：人类生来血液中就缺少 0.05% 的酒精浓度。这微小的差值，正是通往创造力与生命热情的“黄金点”。<span class="en-text">The movie "Another Round" suggests a fascinating hypothesis: humans are born with a 0.05% alcohol deficit.</span></p>
+                <p><strong>喝了再写，醒了再改：</strong>人生亦即如此。我们并非追求沉沦，而是追求在科学的边界内，敢于面对真实的自我。<span class="en-text">Write drunk, edit sober. We seek to face our authentic selves within scientific boundaries.</span></p>
             </section>
 
-            <!-- Footer & Contact -->
-            <footer class="footer-section">
-                <div class="contact-me">
-                    <p>如有任何疑问，请联系我们：<span class="en-text">Any questions? Contact us:</span></p>
-                    <a href="mailto:bestskillz2000@gmail.com" class="email">bestskillz2000@gmail.com</a>
-                </div>
-
-                <div class="footer-quote" style="text-align: center; margin-top: 32px; font-style: italic; color: var(--on-surface-variant);">
-                    “酒以见性，水以养生”<br>
-                    <span style="font-size: 12px; opacity: 0.6;">"In vino veritas, in aqua sanitas."</span>
-                </div>
-
-                <div class="footer-note">
-                    <div class="signature">Bestskillz</div>
-                    <div class="ai-note">
-                        Crafted via Multi-AI Collaboration: Claude (PRD), Stitch (Vision), Antigravity (UI/Soul).
-                    </div>
-                </div>
+            <footer class="footer-note">
+                <p>Contact: bestskillz2000@gmail.com</p>
+                <p style="margin-top: 16px;">DRUK · 微醺志</p>
             </footer>
         </div>
     </div>
