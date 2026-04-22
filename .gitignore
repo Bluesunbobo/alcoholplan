@@ -1,21 +1,7 @@
-# OS X
+AlcoholPlan/
 .DS_Store
-
-# Xcode
-build/
-DerivedData/
-*.xcuserstate
-xcuserdata/
-*.xcworkspace/xcuserdata/
-*.xcworkspace/xcshareddata/SwiftPM/Package.resolved
-*.xcodeproj/xcuserdata/
-*.xcodeproj/project.xcworkspace/xcuserdata/
-
-# Swift Package Manager
-.swiftpm/xcode/package.resolved
-.build/
-
-# Other
-*.moved-aside
-*.pyc
-__pycache__/
+*.xcworkspace
+*.xcuserdata
+*.postman_collection.json
+*.md
+!PrivacyPolicy.md

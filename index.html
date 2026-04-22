@@ -2,148 +2,263 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Privacy Policy - Druk (微醺志)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#ffb960',
-                        error: '#ffb4ab',
-                        background: '#161310',
-                        surface: '#1e1b18',
-                        textPrimary: '#e9e1dc',
-                        textSecondary: '#8C7B6B'
-                    },
-                    fontFamily: {
-                        serif: ['Georgia', 'Times New Roman', 'serif'],
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
-                    }
-                }
-            }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微醺志 Druk - 隐私政策 & 微醺哲学</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --surface-dim: #161310;
+            --surface-container: #1e1b18;
+            --primary: #ffb960;
+            --on-surface: #e9e1dc;
+            --on-surface-variant: #d6c3b1;
+            --amber-glow: rgba(255, 185, 96, 0.05);
         }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .section-bar {
-                @apply border-l-2 border-primary pl-4 mb-6 py-1;
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--surface-dim);
+            background-image: radial-gradient(circle at top center, var(--amber-glow) 0%, transparent 70%);
+            color: var(--on-surface);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 40px;
+            position: relative;
+        }
+
+        .glass-card {
+            background: rgba(40, 36, 33, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 48px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            object-fit: cover;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-style: italic;
+            color: var(--primary);
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .version {
+            font-family: monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: var(--on-surface-variant);
+            opacity: 0.4;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-style: italic;
+            color: var(--primary);
+            margin-top: 56px;
+            margin-bottom: 16px;
+            border-left: 2px solid var(--primary);
+            padding-left: 16px;
+        }
+
+        p {
+            font-size: 15px;
+            color: var(--on-surface-variant);
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+
+        .en-text {
+            display: block;
+            font-size: 13px;
+            font-style: italic;
+            opacity: 0.6;
+            margin-top: 4px;
+        }
+
+        ul {
+            padding-left: 20px;
+            color: var(--on-surface-variant);
+            font-size: 15px;
+            font-weight: 300;
+        }
+
+        li {
+            margin-bottom: 12px;
+        }
+
+        .philosophy-section {
+            margin-top: 80px;
+            padding-top: 48px;
+            border-top: 1px dashed rgba(255, 185, 96, 0.2);
+        }
+
+        .philosophy-title {
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            letter-spacing: 4px;
+            color: var(--primary);
+            opacity: 0.6;
+            margin-bottom: 32px;
+            text-transform: uppercase;
+        }
+
+        .contact-me {
+            margin-top: 64px;
+            padding: 32px;
+            background: rgba(255, 185, 96, 0.03);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .email {
+            font-family: monospace;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 16px;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 64px;
+            padding-top: 24px;
+        }
+
+        .signature {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-style: italic;
+            color: var(--primary);
+            opacity: 0.7;
+            letter-spacing: 2px;
+        }
+
+        .ai-note {
+            font-size: 11px;
+            opacity: 0.3;
+            margin-top: 12px;
+            font-family: monospace;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                padding: 20px;
             }
-            .section-title {
-                @apply text-primary font-serif italic text-xl mb-1;
-            }
-            .section-subtitle {
-                @apply text-primary/60 font-serif italic text-xs uppercase tracking-wider mb-4;
-            }
-            .content-zh {
-                @apply text-[15px] text-textPrimary leading-relaxed mb-3;
-            }
-            .content-en {
-                @apply text-[13px] text-textSecondary italic leading-relaxed mb-8 font-serif;
-            }
-            .bullet-list {
-                @apply list-none pl-1;
-            }
-            .bullet-item {
-                @apply flex items-start gap-2 mb-2;
-            }
-            .bullet-dot {
-                @apply w-1 h-1 bg-textSecondary rounded-full mt-2 shrink-0;
+            .glass-card {
+                padding: 32px 24px;
+                border-radius: 0;
             }
         }
     </style>
 </head>
-<body class="bg-background text-textPrimary selection:bg-primary selection:text-background min-h-screen">
-    <div class="max-w-2xl mx-auto px-8 py-20">
-        
-        <!-- Header: Mirroring Original Image Branding -->
-        <header class="text-center mb-24">
-            <div class="mb-10 inline-block p-1 bg-surface border border-white/10 rounded-2xl shadow-2xl">
-                <img src="icon.png" alt="Druk Icon" class="w-20 h-20 rounded-xl shadow-inner">
-            </div>
-            <h1 class="text-4xl font-serif italic text-primary mb-3">Druk 微醺志</h1>
-            <p class="font-mono text-[10px] tracking-[0.4em] text-textSecondary uppercase opacity-60">PRIVACY & PHILOSOPHY</p>
-        </header>
+<body>
+    <div class="container">
+        <div class="glass-card">
+            <header>
+                <div class="logo-container">
+                    <img src="icon.png" alt="Druk Logo" class="logo">
+                </div>
+                <h1>Druk 微醺志</h1>
+                <div class="version">Privacy & Philosophy</div>
+            </header>
 
-        <!-- Intro -->
-        <section class="mb-20">
-            <div class="section-bar">
-                <h2 class="section-title">隐私政策</h2>
-                <div class="section-subtitle">Privacy Policy</div>
-            </div>
-            <p class="content-zh">微醺志（Druk）是一款注重隐私的应用。我们相信，您的饮酒数据和心境记录纯属私密。本政策说明了我们如何处理您的数据。</p>
-            <p class="content-en">Druk is a privacy-focused app. We believe your drinking data and mood records are purely private. This policy explains how we handle your data.</p>
-        </section>
+            <!-- Section 1: Privacy Policy -->
+            <section id="privacy">
+                <h2>隐私政策 <span class="en-text">Privacy Policy</span></h2>
+                <p>
+                    微醺志（Druk）是一款注重隐私的应用。我们相信，您的饮酒数据和心境记录纯属私密。本政策说明了我们如何处理您的数据。
+                    <span class="en-text">Druk is a privacy-focused app. We believe your drinking data and mood records are purely private. This policy explains how we handle your data.</span>
+                </p>
 
-        <!-- 1. Data Localization -->
-        <section class="mb-16">
-            <div class="section-bar">
-                <h2 class="section-title text-base">数据本地化</h2>
-                <div class="section-subtitle !text-[10px]">Local-First</div>
-            </div>
-            <p class="content-zh">您的所有数据均仅保存在您设备的本地数据库中。我们不提供任何云端同步服务，数据绝不会离开您的设备。</p>
-            <p class="content-en">All data is stored exclusively on your local device. We offer no cloud sync; your data never leaves your device.</p>
-            <ul class="bullet-list">
-                <li class="bullet-item">
-                    <span class="bullet-dot"></span>
-                    <span class="content-zh">不要求注册或登录。</span>
-                </li>
-                <li class="bullet-item">
-                    <span class="bullet-dot"></span>
-                    <span class="content-en">No registration or login required.</span>
-                </li>
-            </ul>
-        </section>
+                <p>
+                    <strong>数据本地化：</strong>您的所有数据均仅保存在您设备的本地数据库中。我们不提供任何云端同步服务，数据绝不会离开您的设备。
+                    <span class="en-text">Local-First: All data is stored exclusively on your local device. We offer no cloud sync; your data never leaves your device.</span>
+                </p>
+                <ul>
+                    <li>不要求注册或登录。 <span class="en-text">No registration or login required.</span></li>
+                    <li>不收集个人身份信息。 <span class="en-text">No personal identity information collected.</span></li>
+                    <li>不包含第三方广告或追踪 SDK。 <span class="en-text">No 3rd-party ads or tracking SDKs.</span></li>
+                </ul>
+            </section>
 
-        <!-- 2. No Data Collection -->
-        <section class="mb-16">
-            <div class="section-bar">
-                <h2 class="section-title text-base">不收集个人信息</h2>
-                <div class="section-subtitle !text-[10px]">No Data Collection</div>
-            </div>
-            <p class="content-zh">我们不会收集、存储或传输任何个人身份信息。本应用不包含任何第三方追踪或广告 SDK。</p>
-            <p class="content-en">We DO NOT collect, store, or transmit any personally identifiable information. No 3rd-party tracking or ads.</p>
-        </section>
+            <!-- Section 2: Our Philosophy -->
+            <section id="philosophy" class="philosophy-section">
+                <div class="philosophy-title">微醺哲学 / Philosophy</div>
+                
+                <p>
+                    <strong>寻找那 0.05% 的本真：</strong>
+                    电影《酒精计划》(Druk) 提出了一个迷人的假说：人类生来血液中就缺少 0.05% 的酒精浓度。这微小的差值，正是通往创造力与生命热情的“黄金点”。
+                    <span class="en-text">The movie "Another Round" (Druk) suggests a fascinating hypothesis: humans are born with a 0.05% alcohol deficit. This tiny margin is the "Gold Point" of creativity and passion.</span>
+                </p>
 
-        <!-- 3. Photo Library -->
-        <section class="mb-16">
-            <div class="section-bar">
-                <h2 class="section-title text-base">相册与媒体</h2>
-                <div class="section-subtitle !text-[10px]">Photo Library</div>
-            </div>
-            <p class="content-zh">相册权限仅用于保存生成的分享海报。我们不会读取或访问您的已有照片。</p>
-            <p class="content-en">Photo library access is ONLY for saving your posters. We do not read or access your existing photos.</p>
-        </section>
+                <p>
+                    <strong>镜鉴与警示：</strong>
+                    正如电影中四位教师的经历，酒精是一面镜子，映照出被生活磨平的少年意气，也可能成为溺毙理性的深渊。我设计微醺志，是为了在诗意与失控之间，留出一寸清醒的余地。辩证地看待酒精，是成年人在这复杂世界中寻找真实的修行。
+                    <span class="en-text">Like the teachers in the film, we see alcohol as a mirror reflecting youthful spirit but also a potential abyss for reason. Druk was designed to find that sliver of clarity between poetry and chaos. Managing this relationship is a modern journey towards authenticity.</span>
+                </p>
 
-        <!-- 4. Account System -->
-        <section class="mb-16">
-            <div class="section-bar border-primary/20">
-                <h2 class="section-title text-base opacity-70">无账号体系</h2>
-                <div class="section-subtitle !text-[10px]">No Account System</div>
-            </div>
-            <p class="content-zh">本应用无账号注册体系。不涉及账号注销。卸载 App 即可彻底销毁本地所有数据。</p>
-            <p class="content-en">No account system. No account deletion needed. All data is destroyed upon uninstallation.</p>
-        </section>
+                <p>
+                    <strong>喝了再写，醒了再改：</strong>
+                    人生亦即如此。我们并非追求沉沦，而是追求在科学的边界内，敢于面对真实的自我。
+                    <span class="en-text">Write drunk, edit sober. Such is life. We seek not to drown, but to face our authentic selves within scientific boundaries.</span>
+                </p>
+            </section>
 
-        <!-- 5. Legal Compliance -->
-        <section class="mb-16 bg-surface/30 p-6 rounded-2xl border border-white/5 backdrop-blur-sm">
-            <div class="section-bar border-error">
-                <h2 class="section-title text-base text-error">法律合规</h2>
-                <div class="section-subtitle !text-[10px] text-error/60">Legal Compliance</div>
-            </div>
-            <p class="content-zh !mb-2">内置多国法律标准，并针对禁酒地区提供强制性警示。使用即表示您同意遵守当地法规。</p>
-            <p class="content-en !mb-0 text-textSecondary/60">Multi-country standards included, with specific warnings for prohibited regions. Usage implies compliance.</p>
-        </section>
+            <!-- Footer & Contact -->
+            <footer class="footer-section">
+                <div class="contact-me">
+                    <p>如有任何疑问，请联系我们：<span class="en-text">Any questions? Contact us:</span></p>
+                    <a href="mailto:bestskillz2000@gmail.com" class="email">bestskillz2000@gmail.com</a>
+                </div>
 
-        <!-- Footer -->
-        <footer class="mt-32 pt-16 border-t border-white/5 text-center">
-            <p class="font-serif italic text-primary/80 mb-2">Another Round, Another Responsibility.</p>
-            <p class="text-[10px] font-mono tracking-widest text-textSecondary opacity-40 uppercase">Druk Development Team</p>
-            <div class="mt-8">
-                <a href="mailto:bestskillz2000@gmail.com" class="text-xs text-textSecondary hover:text-primary transition-colors border-b border-primary/30 pb-0.5">bestskillz2000@gmail.com</a>
-            </div>
-        </footer>
+                <div class="footer-quote" style="text-align: center; margin-top: 32px; font-style: italic; color: var(--on-surface-variant);">
+                    “酒以见性，水以养生”<br>
+                    <span style="font-size: 12px; opacity: 0.6;">"In vino veritas, in aqua sanitas."</span>
+                </div>
+
+                <div class="footer-note">
+                    <div class="signature">Bestskillz</div>
+                    <div class="ai-note">
+                        Crafted via Multi-AI Collaboration: Claude (PRD), Stitch (Vision), Antigravity (UI/Soul).
+                    </div>
+                </div>
+            </footer>
+        </div>
     </div>
 </body>
 </html>
