@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>微醺志 Druk - 隐私政策 & 微醺哲学</title>
+    <title>微醺志 Druk - 法律合规与品牌哲学</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -48,11 +48,22 @@
             margin-bottom: 64px;
         }
 
+        .page-title {
+            font-family: monospace;
+            font-size: 11px;
+            letter-spacing: 5px;
+            color: var(--primary);
+            opacity: 0.8;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
         .logo {
             width: 120px;
             height: 120px;
-            border-radius: 28px;
+            border-radius: 32px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            margin-top: 10px;
             margin-bottom: 32px;
         }
 
@@ -60,7 +71,7 @@
             font-family: 'Playfair Display', serif;
             font-size: 36px;
             font-style: italic;
-            color: var(--primary);
+            color: var(--on-surface);
             margin: 0 0 8px 0;
         }
 
@@ -73,12 +84,11 @@
             text-transform: uppercase;
         }
 
-        /* Capsule Cards Style for legibility */
         .policy-section {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            padding: 24px;
+            padding: 32px;
             margin-bottom: 24px;
         }
 
@@ -106,32 +116,34 @@
             margin-top: 4px;
         }
 
-        .philosophy-section {
-            margin-top: 80px;
-            padding-top: 48px;
-            border-top: 1px dashed rgba(255, 185, 96, 0.2);
+        .section-header {
+            text-align: center;
+            margin: 80px 0 40px 0;
+            padding-top: 40px;
+            border-top: 1px dashed rgba(255, 185, 96, 0.15);
         }
 
-        .philosophy-title {
-            text-align: center;
+        .section-header h3 {
+            font-family: monospace;
             font-size: 12px;
-            letter-spacing: 4px;
+            letter-spacing: 6px;
             color: var(--primary);
             opacity: 0.6;
-            margin-bottom: 32px;
             text-transform: uppercase;
         }
 
-        .footer-note {
+        footer {
             text-align: center;
-            margin-top: 64px;
-            opacity: 0.4;
+            margin-top: 80px;
+            padding-top: 40px;
             font-size: 12px;
+            opacity: 0.3;
         }
 
         @media (max-width: 600px) {
-            .container { padding: 20px; }
-            .glass-card { padding: 32px 20px; border-radius: 0; }
+            .container { padding: 20px; margin: 0; }
+            .glass-card { padding: 40px 24px; border-radius: 0; }
+            h1 { font-size: 28px; }
         }
     </style>
 </head>
@@ -139,59 +151,65 @@
     <div class="container">
         <div class="glass-card">
             <header>
+                <div class="page-title">Compliance & Philosophy</div>
                 <img src="icon.png" alt="Druk Logo" class="logo">
-                <h1>Druk 微醺志</h1>
-                <div class="version">Privacy & Philosophy</div>
+                <h1>Druk · 微醺志</h1>
+                <div class="version">Official Legal Documentation</div>
             </header>
 
-            <!-- FULL COMPLIANCE CONTENT (7 SECTIONS) -->
+            <!-- PRIVACY POLICY -->
             <section id="privacy">
                 <div class="policy-section">
                     <h2>1. 数据本地存储 <span class="en-text">Local Data Storage</span></h2>
-                    <p>摄入记录及配置数据均仅存储在本地设备（Core Data）中。数据绝不会离开您的设备。<span class="en-text">All intake records and profile data are stored exclusively on your local device. Data never leaves your device.</span></p>
+                    <p>摄入记录及配置数据均仅存储在本地设备中。数据绝不会离开您的设备。<span class="en-text">All data is stored exclusively on your local device for maximum privacy.</span></p>
                 </div>
 
                 <div class="policy-section">
                     <h2>2. 不收集信息 <span class="en-text">No Data Collection</span></h2>
-                    <p>本 App 无需注册，不收集姓名、精确位置或唯一标识符。我们不使用任何第三方追踪。<span class="en-text">No registration required. No personal identity information collected. No 3rd-party tracking.</span></p>
+                    <p>本 App 不要求注册，不收集姓名、位置或唯一标识符。无第三方广告或追踪。<span class="en-text">No registration, no PII, and no 3rd-party tracking scripts.</span></p>
                 </div>
 
                 <div class="policy-section">
                     <h2>3. 无账号体系 <span class="en-text">No Account System</span></h2>
-                    <p>本应用无账号注册体系。不涉及账号注销。卸载 App 即可彻底销毁本地所有数据。<span class="en-text">No account system. No account deletion needed. All data is destroyed upon uninstallation.</span></p>
+                    <p>应用内不设账号，不涉及注销流程。卸载 App 即会同步销毁所有历史记录。<span class="en-text">No account logic; uninstallation wipes all localized records permanently.</span></p>
                 </div>
 
                 <div class="policy-section">
-                    <h2>4. 内容分享说明 <span class="en-text">Content Sharing</span></h2>
-                    <p>海报分享通过 iOS 系统组件完成，本 App 不托管、不分发用户内容。因此不涉及 UGC 举报机制。<span class="en-text">Sharing is handled by iOS. We do not host or distribute user content. No UGC reporting required.</span></p>
+                    <h2>4. 法律与地区标准 <span class="en-text">Regional Law Compliance</span></h2>
+                    <p>针对禁酒及酒精管制地区提供强制提醒。使用即代表您同意遵守当地饮酒法规。<span class="en-text">Strict adherence to local laws with mandatory warnings for restricted regions.</span></p>
                 </div>
 
                 <div class="policy-section">
-                    <h2>5. 相册与媒体 <span class="en-text">Photo Library</span></h2>
-                    <p>相册权限仅用于保存生成的微醺海报。我们不会读取或访问您的已有照片。<span class="en-text">Permissions are only for saving posters. We do not read or access your existing photos.</span></p>
-                </div>
-
-                <div class="policy-section">
-                    <h2>6. 地区法律标准 <span class="en-text">Regional Jurisdictions</span></h2>
-                    <p>App 包含多国法律数据库，并针对禁酒地区提供强制性警示。使用即表示您同意遵守当地法规。<span class="en-text">Built-in database for multi-country standards, with specific warnings for prohibited regions.</span></p>
-                </div>
-
-                <div class="policy-section">
-                    <h2>7. 年龄要求 <span class="en-text">Age Requirement</span></h2>
-                    <p>本应用仅限已达到法定饮酒年龄（18+）的成年人使用。<span class="en-text">Strictly for adults (18+). No data from minors.</span></p>
+                    <h2>5. 相册权限 <span class="en-text">Photo Permissions</span></h2>
+                    <p>权限仅用于保存生成的微醺海报导出。本 App 绝不读取您的个人媒体库。<span class="en-text">Photo permission is WRITE-ONLY for saving generated share posters.</span></p>
                 </div>
             </section>
 
-            <!-- PHILOSOPHY SECTION -->
-            <section id="philosophy" class="philosophy-section">
-                <div class="philosophy-title">微醺哲学 / Philosophy</div>
-                <p><strong>寻找那 0.05% 的本真：</strong>电影《酒精计划》(Druk) 提出了一个迷人的假说：人类生来血液中就缺少 0.05% 的酒精浓度。这微小的差值，正是通往创造力与生命热情的“黄金点”。<span class="en-text">The movie "Another Round" suggests a fascinating hypothesis: humans are born with a 0.05% alcohol deficit.</span></p>
-                <p><strong>喝了再写，醒了再改：</strong>人生亦即如此。我们并非追求沉沦，而是追求在科学的边界内，敢于面对真实的自我。<span class="en-text">Write drunk, edit sober. We seek to face our authentic selves within scientific boundaries.</span></p>
+            <!-- PHILOSOPHY SECTION (Now matching Privacy UI) -->
+            <div class="section-header">
+                <h3>Our Philosophy</h3>
+            </div>
+
+            <section id="philosophy">
+                <div class="policy-section">
+                    <h2>寻找那 0.05% 的本真 <span class="en-text">The 0.05% Deficit</span></h2>
+                    <p>人类生来血液中就缺少 0.05% 的酒精浓度。这微小的差值，正是通往创造力与生命热情的“黄金点”。<span class="en-text">The "Another Round" hypothesis: humans are born with a 0.05% alcohol deficit.</span></p>
+                </div>
+
+                <div class="policy-section">
+                    <h2>镜鉴与警示 <span class="en-text">The Life Mirror</span></h2>
+                    <p>酒精是一面镜子，映照出真实自我。微醺志致力于在诗意与失控之间，为您守住那份清醒。<span class="en-text">A tool designed to find the sliver of clarity between poetry and chaos.</span></p>
+                </div>
+
+                <div class="policy-section">
+                    <h2>喝了再写，醒了再改 <span class="en-text">Write Drunk, Edit Sober</span></h2>
+                    <p>我们追求在科学的边界内感悟生活，敢于面对真实的自我。酒以见性，水以养生。<span class="en-text">Face your authentic self within safe scientific boundaries.</span></p>
+                </div>
             </section>
 
-            <footer class="footer-note">
+            <footer>
                 <p>Contact: bestskillz2000@gmail.com</p>
-                <p style="margin-top: 16px;">DRUK · 微醺志</p>
+                <p style="margin-top: 12px;">© 2024 Druk Team · All Rights Reserved</p>
             </footer>
         </div>
     </div>
