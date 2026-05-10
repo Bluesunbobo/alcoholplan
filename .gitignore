@@ -1,7 +1,9 @@
-AlcoholPlan/
+*.psd
+*.MOV
 .DS_Store
-*.xcworkspace
-*.xcuserdata
-*.postman_collection.json
-*.md
-!PrivacyPolicy.md
+v1.0.0功能截图/
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+

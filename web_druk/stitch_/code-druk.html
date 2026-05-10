@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Druk (微醺志) - Drink Mindfully</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;family=Playfair+Display:wght@700&amp;family=Roboto+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Noise overlay */
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+</style>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "bg-card": "#1E1B18",
+                "bg-card-high": "#231F1C",
+                "ivory": "#F7EDD9",
+                "surface-container-highest": "#3a342d",
+                "primary-container": "#ffb960",
+                "on-secondary-fixed": "#281900",
+                "primary": "#ffddb8",
+                "on-tertiary": "#003547",
+                "secondary-fixed-dim": "#f4bd63",
+                "on-error": "#690005",
+                "inverse-on-surface": "#362f28",
+                "glass-bg": "rgba(255, 255, 255, 0.05)",
+                "on-primary-fixed-variant": "#653e00",
+                "secondary-container": "#825900",
+                "error-container": "#93000a",
+                "surface-container-low": "#201b14",
+                "bg-base": "#161310",
+                "on-tertiary-fixed-variant": "#004d66",
+                "background": "#18120d",
+                "surface-container-lowest": "#120d08",
+                "tertiary-fixed": "#c0e8ff",
+                "glass-border": "rgba(255, 255, 255, 0.10)",
+                "text-muted": "#D6C3B1",
+                "secondary-fixed": "#ffdead",
+                "primary-fixed-dim": "#ffb960",
+                "on-secondary-container": "#ffd698",
+                "bg-opener": "#050505",
+                "tertiary-container": "#7ad1fa",
+                "surface-variant": "#3a342d",
+                "on-primary": "#472a00",
+                "on-surface-variant": "#d6c3b2",
+                "surface": "#18120d",
+                "on-secondary-fixed-variant": "#604100",
+                "outline": "#9e8e7e",
+                "tertiary": "#bfe8ff",
+                "on-surface": "#ede0d6",
+                "on-tertiary-container": "#005976",
+                "amber-glow": "rgba(217, 165, 77, 0.20)",
+                "text-main": "#E9E1DC",
+                "on-primary-fixed": "#2a1700",
+                "tertiary-fixed-dim": "#7ad1fa",
+                "surface-bright": "#3f3831",
+                "secondary": "#f4bd63",
+                "on-primary-container": "#754900",
+                "error": "#ffb4ab",
+                "surface-tint": "#ffb960",
+                "surface-container-high": "#2f2922",
+                "surface-dim": "#18120d",
+                "inverse-surface": "#ede0d6",
+                "on-error-container": "#ffdad6",
+                "on-tertiary-fixed": "#001f2b",
+                "primary-fixed": "#ffddb8",
+                "outline-variant": "#514537",
+                "on-background": "#ede0d6",
+                "surface-container": "#241f18",
+                "on-secondary": "#432c00",
+                "inverse-primary": "#855300"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "stack-md": "16px",
+                "section-gap": "160px",
+                "card-padding": "40px",
+                "container-max": "1100px",
+                "stack-sm": "8px",
+                "stack-lg": "32px",
+                "gutter": "24px"
+        },
+        "fontFamily": {
+                "philosophy-title-en": [
+                        "Playfair Display"
+                ],
+                "h1-zh": [
+                        "Noto Serif SC"
+                ],
+                "data-mono": [
+                        "Roboto Mono"
+                ],
+                "body-main": [
+                        "Noto Serif SC"
+                ],
+                "label-caps": [
+                        "Roboto Mono"
+                ],
+                "display-hero": [
+                        "Playfair Display"
+                ]
+        },
+        "fontSize": {
+                "philosophy-title-en": [
+                        "24px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "h1-zh": [
+                        "48px",
+                        {
+                                "lineHeight": "1.4",
+                                "fontWeight": "700"
+                        }
+                ],
+                "data-mono": [
+                        "14px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-main": [
+                        "18px",
+                        {
+                                "lineHeight": "1.8",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.2em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "display-hero": [
+                        "64px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+</head>
+<body class="bg-background text-text-main font-body-main text-body-main antialiased relative">
+<div class="fixed inset-0 bg-noise z-[9999]"></div>
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-transparent backdrop-blur-md bg-glass-bg border-b border-glass-border">
+<div class="flex justify-between items-center px-gutter py-stack-md max-w-container-max mx-auto">
+<div class="font-display-hero text-philosophy-title-en text-primary tracking-widest">Druk</div>
+<div class="hidden md:flex gap-stack-lg items-center">
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#philosophy">Philosophy</a>
+<a class="text-text-muted font-body-main hover:text-secondary-fixed transition-colors duration-500" href="#insights">Insights</a>
+<a class="text-text-muted font-body-main hover:text-secondary-fixed transition-colors duration-500" href="#features">Features</a>
+<a class="text-text-muted font-body-main hover:text-secondary-fixed transition-colors duration-500" href="#storytelling">Timeline</a>
+</div>
+<a class="font-label-caps text-label-caps text-primary border border-primary px-4 py-2 rounded-full hover:bg-primary hover:text-bg-base transition-colors duration-500" href="#download">Download</a>
+</div>
+</nav>
+<!-- Cinematic Opener -->
+<section class="h-screen w-full bg-bg-opener flex items-center justify-center relative overflow-hidden" id="opener">
+<div class="text-center z-10 max-w-3xl px-gutter">
+<p class="font-h1-zh text-h1-zh text-text-muted opacity-80 mb-stack-md">人类血液中天生缺少 0.05% 的酒精</p>
+<p class="font-philosophy-title-en text-philosophy-title-en text-text-muted opacity-60 mb-stack-sm">We are born with a 0.05% blood alcohol deficit.</p>
+<p class="font-body-main text-body-main text-text-muted opacity-40 italic">Vi er født med en promille på 0,5 for lidt.</p>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent z-0"></div>
+</section>
+<!-- Hero Section -->
+<section class="min-h-screen w-full relative flex items-center justify-center py-section-gap overflow-hidden" id="hero">
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-glow via-background to-background opacity-50 z-0"></div>
+<div class="relative z-10 max-w-container-max mx-auto px-gutter flex flex-col md:flex-row items-center justify-between w-full gap-section-gap">
+<div class="flex-1 text-center md:text-left">
+<h1 class="font-display-hero text-display-hero text-primary mb-stack-lg">微醺志 · DRUK</h1>
+<p class="font-philosophy-title-en text-philosophy-title-en text-text-muted mb-stack-lg">Every pour is a frame in your story.</p>
+<p class="font-body-main text-body-main text-text-muted max-w-md mx-auto md:mx-0">Track your BAC not as a metric of restriction, but as a map of the soul's liberation. Experience the ephemeral sensation of a slight buzz, visualized.</p>
+</div>
+<div class="flex-1 relative perspective-[1000px]">
+<div class="relative w-full max-w-[400px] mx-auto transform-gpu rotate-y-[-15deg] rotate-x-[5deg] shadow-2xl rounded-[3rem] p-4 bg-glass-bg border border-glass-border backdrop-blur-xl">
+<img alt="A sleek digital rendering of a modern smartphone floating in a dark void. The screen displays a minimalist application interface with deep amber accents against a pure black background. The lighting is cinematic, casting subtle, glowing reflections on the phone's glass surface and metallic edges, emphasizing a premium, luxurious product design." class="w-full h-auto rounded-[2.5rem] shadow-inner" data-alt="A sleek digital rendering of a modern smartphone floating in a dark void. The screen displays a minimalist application interface with deep amber accents against a pure black background. The lighting is cinematic, casting subtle, glowing reflections on the phone's glass surface and metallic edges, emphasizing a premium, luxurious product design." src="https://lusion.co/"/>
+<div class="absolute inset-0 shadow-[inset_0_0_40px_rgba(217,165,77,0.2)] rounded-[3rem] pointer-events-none"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Philosophy Section -->
+<section class="py-section-gap w-full relative" id="philosophy">
+<div class="max-w-container-max mx-auto px-gutter">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-stack-lg">
+<div class="bg-glass-bg backdrop-blur-md border border-glass-border p-card-padding rounded-xl relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<span class="material-symbols-outlined text-primary text-4xl mb-stack-md" data-weight="fill" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<h3 class="font-philosophy-title-en text-philosophy-title-en text-primary mb-stack-md">0.05% Truth</h3>
+<p class="font-body-main text-body-main text-text-muted">The scientific hypothesis that humans perform best with a slight blood alcohol level. We track the ascent to this optimal state of relaxation and courage.</p>
+</div>
+<div class="bg-glass-bg backdrop-blur-md border border-glass-border p-card-padding rounded-xl relative overflow-hidden group mt-0 md:mt-stack-lg">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<span class="material-symbols-outlined text-primary text-4xl mb-stack-md" data-weight="fill" style="font-variation-settings: 'FILL' 1;">hourglass_top</span>
+<h3 class="font-philosophy-title-en text-philosophy-title-en text-primary mb-stack-md">Art of Restraint</h3>
+<p class="font-body-main text-body-main text-text-muted">Visualizing the gentle descent. Not a warning, but a guide to pacing, ensuring the night remains poetic rather than chaotic.</p>
+</div>
+<div class="bg-glass-bg backdrop-blur-md border border-glass-border p-card-padding rounded-xl relative overflow-hidden group mt-0 md:mt-[64px]">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<span class="material-symbols-outlined text-primary text-4xl mb-stack-md" data-weight="fill" style="font-variation-settings: 'FILL' 1;">vignette</span>
+<h3 class="font-philosophy-title-en text-philosophy-title-en text-primary mb-stack-md">Be Here Now</h3>
+<p class="font-body-main text-body-main text-text-muted">Capture the feeling, the location, the company. Each session is a digital polaroid of your state of mind, preserved in amber.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Insights / Heatmap Section -->
+<section class="py-section-gap w-full relative bg-bg-card-high border-y border-glass-border" id="insights">
+<div class="max-w-container-max mx-auto px-gutter text-center">
+<h2 class="font-philosophy-title-en text-philosophy-title-en text-primary mb-stack-sm">The Year in Spirits</h2>
+<p class="font-data-mono text-data-mono text-text-muted mb-stack-lg">Frequency and intensity of your 'buzz'.</p>
+<div class="overflow-x-auto pb-stack-md">
+<div class="inline-grid grid-rows-[repeat(14,minmax(0,1fr))] grid-cols-[repeat(26,minmax(0,1fr))] gap-1 min-w-max mx-auto bg-bg-base p-card-padding rounded-lg border border-glass-border">
+<!-- Generating a 26x14 grid with random amber opacities -->
+<!-- Simplified for HTML rendering, typically generated via loop -->
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.2)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.6)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.9)] shadow-[0_0_8px_rgba(255,185,96,0.5)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.1)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.4)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.8)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.3)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.1)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.7)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.5)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.2)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,1)] shadow-[0_0_10px_rgba(255,185,96,0.8)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.4)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.1)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.6)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.3)]"></div>
+<!-- Repeating a few rows for visual effect -->
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.1)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.7)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.5)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.2)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,1)] shadow-[0_0_10px_rgba(255,185,96,0.8)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.4)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.1)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.6)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.3)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.4)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.8)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.3)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.1)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.7)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.5)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.2)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,1)] shadow-[0_0_10px_rgba(255,185,96,0.8)]"></div>
+<div class="w-4 h-4 rounded-sm bg-[rgba(255,185,96,0.4)]"></div>
+<div class="w-4 h-4 rounded-sm bg-glass-bg"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Storytelling / Poster Section -->
+<section class="py-section-gap w-full relative overflow-hidden" id="storytelling">
+<div class="max-w-container-max mx-auto px-gutter flex flex-col md:flex-row items-center gap-section-gap">
+<div class="flex-1 order-2 md:order-1 relative">
+<div class="w-full max-w-sm mx-auto aspect-[2/3] rounded-xl overflow-hidden shadow-2xl border border-glass-border relative">
+<img alt="A cinematic, vertical poster design framed within a sleek digital container. The image portrays a moody, atmospheric night scene—perhaps a softly blurred cityscape or a dimly lit, elegant bar interior. Golden light spills across dark, textured surfaces. Deep black shadows contrast with luminous amber highlights, echoing the sophisticated dark mode UI and creating a sense of intimate, poetic storytelling." class="w-full h-full object-cover" data-alt="A cinematic, vertical poster design framed within a sleek digital container. The image portrays a moody, atmospheric night scene—perhaps a softly blurred cityscape or a dimly lit, elegant bar interior. Golden light spills across dark, textured surfaces. Deep black shadows contrast with luminous amber highlights, echoing the sophisticated dark mode UI and creating a sense of intimate, poetic storytelling." src="https://lh3.googleusercontent.com/aida/ADBb0uhteMc37tgAp9cybDyMje5fChvjFawaAtFWWwhTWSK_gMgggPbn8QTaYWmlH2PTklrHqZ7Ibt5MCAYQxDDJ2Z505XUHxjLOkHLL3eJqXbFJJo43Ce4CSo3cZRbOHDwfxb1Wk7e6uHDDCMWooJ8JOJB7wGjDwjYX4rbVRGb0qS51J6_eF3ARbr4LuK4gtMKHqmQJwQuPOpnt63gdGcGbATotXZAEC2ubibVRFkzr_lnD-pS_WewWrU7VMF8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-bg-base via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-0 left-0 p-card-padding w-full">
+<p class="font-data-mono text-data-mono text-primary mb-stack-sm tracking-widest">SESSION_042</p>
+<h3 class="font-philosophy-title-en text-philosophy-title-en text-text-main mb-stack-md">Midnight in Copenhagen</h3>
+<p class="font-body-main text-body-main text-text-muted text-sm line-clamp-2">The conversation drifted like smoke, lingering just above the rim of the glass.</p>
+</div>
+</div>
+<div class="absolute -z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-amber-glow blur-[100px] rounded-full opacity-30"></div>
+</div>
+<div class="flex-1 order-1 md:order-2">
+<h2 class="font-philosophy-title-en text-philosophy-title-en text-primary mb-stack-md text-4xl">Your Night, Framed.</h2>
+<p class="font-body-main text-body-main text-text-muted mb-stack-lg">Every drinking session is a narrative arc. Druk generates cinematic posters of your evenings, blending your BAC data, location, and notes into beautifully designed artifacts. Share the poetry of the night, not just the blurry photos.</p>
+<ul class="space-y-stack-md">
+<li class="flex items-start gap-stack-sm">
+<span class="material-symbols-outlined text-primary mt-1">auto_awesome</span>
+<span class="font-body-main text-body-main text-text-main">Generative art based on your peak BAC.</span>
+</li>
+<li class="flex items-start gap-stack-sm">
+<span class="material-symbols-outlined text-primary mt-1">location_on</span>
+<span class="font-body-main text-body-main text-text-main">Geotagged atmospheric memories.</span>
+</li>
+<li class="flex items-start gap-stack-sm">
+<span class="material-symbols-outlined text-primary mt-1">ios_share</span>
+<span class="font-body-main text-body-main text-text-main">Export in high-resolution for stories.</span>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Download CTA Section -->
+<section class="py-section-gap w-full relative bg-bg-card border-y border-glass-border" id="download">
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-[rgba(255,185,96,0.05)] to-transparent z-0"></div>
+<div class="max-w-container-max mx-auto px-gutter text-center relative z-10">
+<h2 class="font-display-hero text-display-hero text-primary mb-stack-md">Begin the Experiment.</h2>
+<p class="font-body-main text-body-main text-text-muted max-w-2xl mx-auto mb-stack-lg">Download Druk and discover the delicate balance of 0.05%.</p>
+<div class="flex flex-col sm:flex-row justify-center items-center gap-stack-md">
+<button class="w-full sm:w-auto flex items-center justify-center gap-stack-sm bg-bg-base border border-glass-border p-4 rounded-xl hover:bg-glass-bg hover:border-primary/50 transition-all duration-300 group shadow-[0_0_0_rgba(217,165,77,0)] hover:shadow-[0_0_20px_rgba(217,165,77,0.2)]">
+<span class="material-symbols-outlined text-primary text-3xl">ios</span>
+<div class="text-left">
+<p class="font-label-caps text-label-caps text-text-muted text-[10px]">Download on the</p>
+<p class="font-body-main text-body-main text-text-main font-bold leading-none">App Store</p>
+</div>
+</button>
+<button class="w-full sm:w-auto flex items-center justify-center gap-stack-sm bg-bg-base border border-glass-border p-4 rounded-xl hover:bg-glass-bg hover:border-primary/50 transition-all duration-300 group shadow-[0_0_0_rgba(217,165,77,0)] hover:shadow-[0_0_20px_rgba(217,165,77,0.2)]">
+<span class="material-symbols-outlined text-primary text-3xl">android</span>
+<div class="text-left">
+<p class="font-label-caps text-label-caps text-text-muted text-[10px]">Get it for</p>
+<p class="font-body-main text-body-main text-text-main font-bold leading-none">Android (APK)</p>
+</div>
+</button>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full py-section-gap bg-bg-base border-t border-glass-border">
+<div class="flex flex-col md:flex-row justify-between items-center px-gutter max-w-container-max mx-auto gap-stack-lg">
+<div class="font-philosophy-title-en text-primary text-2xl">Druk</div>
+<div class="flex flex-wrap justify-center gap-stack-md">
+<a class="font-label-caps text-label-caps text-text-muted hover:text-amber-glow opacity-80 hover:opacity-100 transition-opacity" href="#">Terms of Service</a>
+<a class="font-label-caps text-label-caps text-text-muted hover:text-amber-glow opacity-80 hover:opacity-100 transition-opacity" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps text-text-muted hover:text-amber-glow opacity-80 hover:opacity-100 transition-opacity" href="#">Health Advisory</a>
+<a class="font-label-caps text-label-caps text-text-muted hover:text-amber-glow opacity-80 hover:opacity-100 transition-opacity" href="#">Contact</a>
+</div>
+<div class="font-label-caps text-label-caps text-text-muted opacity-60">
+        © 2024 Druk (微醺志). Drink Mindfully.
+      </div>
+</div>
+</footer>
+</body></html>

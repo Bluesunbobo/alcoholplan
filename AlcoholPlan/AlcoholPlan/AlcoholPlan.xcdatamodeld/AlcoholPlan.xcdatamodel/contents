@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
+    <entity name="DrinkEntry" representedClassName="DrinkEntry" syncable="YES" codeGenerationType="class">
+        <attribute name="abv" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="drinkType" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="volumeML" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DrinkSession" inverseName="entries" inverseEntity="DrinkSession"/>
+    </entity>
+    <entity name="DrinkSession" representedClassName="DrinkSession" syncable="YES" codeGenerationType="class">
+        <attribute name="endTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="hangoverScore" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="location" optional="YES" attributeType="String"/>
+        <attribute name="moodEmoji" optional="YES" attributeType="String"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="occasionTag" optional="YES" attributeType="String"/>
+        <attribute name="peakBAC" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="photoData" optional="YES" attributeType="Binary" usesScalarValueType="NO"/>
+        <attribute name="reflectionPoint" optional="YES" attributeType="String"/>
+        <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="totalAlcoholGrams" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="totalVolumeML" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="entries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="DrinkEntry" inverseName="session" inverseEntity="DrinkEntry"/>
+    </entity>
+    <elements>
+        <element name="DrinkEntry" positionX="-100" positionY="-18" width="128" height="120"/>
+        <element name="DrinkSession" positionX="100" positionY="-18" width="128" height="270"/>
+    </elements>
+</model>

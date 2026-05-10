@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微醺志 · Druk — 用电影感，记录微醺时刻</title>
+    <meta name="description" content="微醺志是一款电影感饮酒追踪 App，灵感来自电影《Druk》。实时 BAC 计算、全年热力图、电影级海报生成。">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=Roboto+Mono:wght@400;700;900&family=Noto+Serif:ital,wght@1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #161310;
+            --bg-deep: #050505;
+            --bg-card: #1E1B18;
+            --primary: #FFB960;
+            --amber: #D9A54D;
+            --ivory: #F7EDD9;
+            --text: #E9E1DC;
+            --text-muted: rgba(233, 225, 220, 0.4);
+            --font-zh: 'Noto Serif SC', serif;
+            --font-en: 'Playfair Display', serif;
+            --font-mono: 'Roboto Mono', monospace;
+            --font-quote: 'Noto Serif', serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-zh);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Noise Texture Overlays */
+        body::before {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.05; z-index: 10000;
+        }
+
+        /* Scroll Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+        .fade-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Section 0: Cinematic Opener */
+        #opener {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--bg-deep);
+            z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .opener-content { text-align: center; max-width: 800px; padding: 0 40px; }
+        .opener-text { opacity: 0; transition: opacity 2s ease; margin-bottom: 2rem; }
+        .opener-zh { font-size: 1.5rem; font-weight: 500; letter-spacing: 0.1em; margin-bottom: 1rem; }
+        .opener-en { font-family: var(--font-quote); font-size: 1rem; font-style: italic; color: var(--text-muted); }
+        .opener-sig { margin-top: 3rem; opacity: 0; transition: opacity 2s ease; }
+        .opener-sig .line { width: 40px; height: 1px; background: var(--amber); margin: 0 auto 20px; opacity: 0.4; }
+        .opener-sig .name { font-size: 1.1rem; color: var(--amber); font-style: italic; }
+        .opener-sig .sub { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.3em; color: rgba(255, 255, 255, 0.2); margin-top: 8px; }
+        .tap-hint { position: absolute; bottom: 60px; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em; color: rgba(255, 255, 255, 0.3); opacity: 0; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.5; } }
+        .no-scroll { overflow: hidden; }
+
+        /* Section Base */
+        section { padding: 120px 20px; max-width: 1100px; margin: 0 auto; position: relative; }
+        .section-header { margin-bottom: 60px; text-align: center; }
+        .section-tag { font-family: var(--font-mono); font-size: 0.7rem; color: var(--primary); letter-spacing: 0.3em; text-transform: uppercase; display: block; margin-bottom: 15px; }
+        .section-title { font-size: 2.5rem; font-family: var(--font-zh); font-weight: 700; }
+
+        /* Section 1: Hero */
+        #hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; text-align: center; padding: 0 20px; }
+        #hero-canvas { position: absolute; top: 0; left: 0; z-index: -1; }
+        .hero-title { font-family: var(--font-en); font-size: 5rem; font-weight: 900; font-style: italic; margin-bottom: 10px; color: var(--text); letter-spacing: -0.02em; }
+        .hero-subtitle { font-size: 1.2rem; letter-spacing: 0.2em; color: var(--amber); margin-bottom: 40px; font-weight: 300; }
+        .cta-group { display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap; justify-content: center; }
+        .btn { padding: 16px 32px; border-radius: 12px; font-family: var(--font-mono); font-size: 0.8rem; text-decoration: none; transition: all 0.4s ease; display: flex; align-items: center; gap: 12px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); color: var(--ivory); backdrop-filter: blur(10px); }
+        .btn:hover { border-color: var(--primary); background: rgba(255, 185, 96, 0.15); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+        .btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+        /* Section 2: Philosophy */
+        .philosophy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; padding: 40px; backdrop-filter: blur(12px); transition: all 0.5s ease; }
+        .glass-card:hover { background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 185, 96, 0.3); transform: translateY(-10px); }
+        .card-en { font-family: var(--font-mono); font-size: 0.6rem; color: var(--primary); opacity: 0.5; margin-bottom: 12px; display: block; }
+        .card-zh { font-size: 1.4rem; margin-bottom: 20px; color: var(--ivory); }
+        .card-content { font-size: 0.95rem; color: var(--text-muted); line-height: 1.8; }
+
+        /* Section 3: BAC Demo */
+        #bac-demo { text-align: center; }
+        .chart-container { background: var(--bg-card); border-radius: 32px; padding: 50px; margin-top: 40px; position: relative; border: 1px solid rgba(255, 255, 255, 0.03); overflow: hidden; }
+        .bac-chart { width: 100%; height: 300px; }
+        .bac-line { fill: none; stroke: var(--primary); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        .bac-line.animated { animation: drawLine 3s ease-out forwards; }
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
+        .chart-labels { display: flex; justify-content: space-between; margin-top: 20px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); }
+        .chart-peak { position: absolute; top: 20%; left: 45%; color: var(--primary); font-family: var(--font-mono); font-size: 0.8rem; opacity: 0; transition: opacity 1s 2s; }
+        .chart-peak.is-visible { opacity: 1; }
+
+        /* Section 4: Heatmap */
+        #heatmap { display: flex; align-items: center; gap: 60px; }
+        .heatmap-text { flex: 1; }
+        .heatmap-visual { flex: 1.5; background: var(--bg-card); padding: 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.03); }
+        .heatmap-grid { display: grid; grid-template-columns: repeat(26, 1fr); gap: 4px; }
+        .heatmap-cell { aspect-ratio: 1; background: rgba(255, 255, 255, 0.04); border-radius: 2px; }
+        .heatmap-stats { display: flex; gap: 30px; margin-top: 30px; font-family: var(--font-mono); }
+        .stat-item .val { font-size: 1.5rem; color: var(--primary); font-weight: 700; display: block; }
+        .stat-item .lab { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
+
+        /* Section 5: Poster Mockup */
+        #poster { text-align: center; }
+        .poster-display { display: flex; justify-content: center; align-items: center; margin-top: 50px; perspective: 1000px; }
+        .phone-mockup { width: 280px; height: 560px; background: #000; border-radius: 40px; border: 8px solid #222; box-shadow: 0 50px 100px rgba(0,0,0,0.8); overflow: hidden; position: relative; transform: rotateY(-15deg) rotateX(5deg); transition: transform 0.8s cubic-bezier(0.2, 0, 0.2, 1); }
+        .phone-mockup:hover { transform: rotateY(0) rotateX(0); }
+        .mockup-content { width: 100%; height: 100%; background: linear-gradient(to bottom, #1a1714, #000); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        .mockup-poster-art { width: 100%; aspect-ratio: 0.7; background: var(--bg-card); border: 1px solid var(--amber); position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .mockup-poster-art::after { content: "DRUK"; font-family: var(--font-en); font-size: 3rem; opacity: 0.1; }
+
+        /* Section 6: Timeline */
+        #timeline { max-width: 800px; margin: 0 auto; }
+        .timeline-container { position: relative; padding-left: 40px; }
+        .timeline-line { position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, transparent, var(--primary), transparent); opacity: 0.2; }
+        .timeline-item { margin-bottom: 40px; position: relative; }
+        .timeline-dot { position: absolute; left: -44.5px; top: 10px; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 15px var(--primary); }
+        .session-card { background: rgba(255, 255, 255, 0.02); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .session-header { display: flex; justify-content: space-between; margin-bottom: 12px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--primary); }
+        .session-body { font-size: 1.1rem; color: var(--ivory); margin-bottom: 8px; }
+        .session-meta { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Section 7: Final CTA & Footer */
+        #final-download { background: var(--bg-deep); text-align: center; padding: 150px 20px; }
+        .footer { padding: 60px 20px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.03); font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.1em; }
+        .footer-quote { font-family: var(--font-en); font-style: italic; font-size: 1rem; color: var(--primary); margin-bottom: 20px; opacity: 0.6; }
+
+        @media (max-width: 900px) {
+            #heatmap { flex-direction: column; }
+            .hero-title { font-size: 3rem; }
+            section { padding: 80px 20px; }
+        }
+    </style>
+</head>
+<body class="no-scroll">
+
+    <!-- Section 0: Cinematic Opener -->
+    <div id="opener" onclick="closeOpener()">
+        <div class="opener-content">
+            <div class="opener-text" id="phase-1">
+                <div class="opener-zh">“ 人类生来血液中就缺少 0.05% 的<br>酒精。 ”</div>
+                <div class="opener-en">Humans are born with a blood alcohol level that is 0.05% too low.</div>
+            </div>
+            <div class="opener-text" id="phase-2">
+                <div class="opener-en" style="font-size: 0.8rem; opacity: 0.6;">Mennesker er født med et underskudd på 0,5 promille alkohol i blodet.</div>
+            </div>
+            <div class="opener-sig" id="phase-3">
+                <div class="line"></div>
+                <div class="name">— Finn Skårderud</div>
+                <div class="sub">D R U K   ·   2 0 2 0</div>
+            </div>
+        </div>
+        <div class="tap-hint" id="tap-hint">T A P   T O   E N T E R   ·   轻 触 进 入</div>
+    </div>
+
+    <!-- Section 1: Hero -->
+    <section id="hero">
+        <canvas id="hero-canvas"></canvas>
+        <h1 class="hero-title">D R U K</h1>
+        <p class="hero-subtitle">微 醺 志  ·  灵 魂 的 精 准 留 白</p>
+        <div class="cta-group">
+            <a href="#" class="btn ios-btn">
+                <svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 21.8-88.5 21.8-11.4 0-51.1-20.8-83.6-20.1-41.2.9-80.1 24.5-101.4 62.3-34.3 60.5-8.8 158.2 24.9 207 16.3 23.8 35.9 50.6 61.8 49.7 25.4-.8 35.3-16.2 65.8-16.2 30.2 0 38.7 16.2 66.5 15.7 26.7-.5 44.1-24.1 60.4-48.1 18.7-27.7 25.9-54.4 26.2-55.8-.9-.3-50.8-19.5-51.2-76.9zm-58.2-131.4c16.2-19.9 27.1-47.8 24-75.8-24.9 1.1-55.5 17.1-73.4 38-15.6 18.1-29.1 46.5-25.3 73.8 28.1 2.2 57.5-16 74.7-36z"/></svg>
+                <span>App Store</span>
+            </a>
+            <a href="#" class="btn android-btn">
+                <svg viewBox="0 0 448 512"><path d="M424.8 215.2L190.1 23c-14.7-14.7-38.5-14.7-53.2 0L24.8 135.2c-14.7 14.7-14.7 38.5 0 53.2l212.1 212.1c14.7 14.7 38.5 14.7 53.2 0l134.7-134.7c14.7-14.7 14.7-38.5 0-53.2zM216.7 334.8c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3 32.8-12.5 45.3 0 12.5 32.8 0 45.3zm0-160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3 32.8-12.5 45.3 0 12.5 32.8 0 45.3z"/></svg>
+                <span>Android APK</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Section 2: Philosophy -->
+    <section id="philosophy">
+        <div class="section-header">
+            <span class="section-tag">Philosophy</span>
+            <h2 class="section-title">微醺哲学</h2>
+        </div>
+        <div class="philosophy-grid">
+            <div class="glass-card fade-up">
+                <span class="card-en">THE 0.05% TRUTH</span>
+                <h3 class="card-zh">0.05% 的真实</h3>
+                <p class="card-content">人类血液中天生缺少 0.05% 的酒精。这一小段距离，往往就是理性与本真之间的鸿沟。我们记录，不是为了沉溺，而是为了找回那一丝松动的、诚实的灵魂。</p>
+            </div>
+            <div class="glass-card fade-up">
+                <span class="card-en">THE ART OF RESTRAINT</span>
+                <h3 class="card-zh">克制的艺术</h3>
+                <p class="card-content">真正的微醺是一场在悬崖边缘的华尔兹。多一分则坠入混沌，少一分则流于平庸。Druk 致力于通过数据化你的身体反应，帮助你精准定位那份属于你的“黄金点”。</p>
+            </div>
+            <div class="glass-card fade-up">
+                <span class="card-en">BE HERE, NOW</span>
+                <h3 class="card-zh">在当下，去生活</h3>
+                <p class="card-content">酒杯映照出的不仅是液体，更是时间的停滞。当你放下忧虑，只为此刻而饮时，酒精成为了时间的防腐剂。每一份记录，都能成为你人生故事里一个温暖的注脚。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: BAC Demo -->
+    <section id="bac-demo">
+        <div class="section-header">
+            <span class="section-tag">Real-time Calculation</span>
+            <h2 class="section-title">Widmark 精准精算</h2>
+        </div>
+        <div class="chart-container fade-up">
+            <div class="chart-peak" id="peak-tag">PEAK BAC: 0.048% (Golden Point)</div>
+            <svg class="bac-chart" viewBox="0 0 1000 300">
+                <line x1="0" y1="280" x2="1000" y2="280" stroke="rgba(255,255,255,0.05)" />
+                <line x1="0" y1="200" x2="1000" y2="200" stroke="rgba(255,255,255,0.05)" />
+                <line x1="0" y1="120" x2="1000" y2="120" stroke="rgba(255,255,255,0.05)" />
+                <path class="bac-line" id="bac-line" d="M0,280 Q250,50 500,120 T1000,280" />
+            </svg>
+            <div class="chart-labels">
+                <span>0h (START)</span>
+                <span>2h (PEAK)</span>
+                <span>4h</span>
+                <span>6h</span>
+                <span>8h (CLEAN)</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Heatmap -->
+    <section id="heatmap">
+        <div class="heatmap-text">
+            <div class="section-header" style="text-align: left;">
+                <span class="section-tag">Yearly Records</span>
+                <h2 class="section-title">全年微醺档案</h2>
+            </div>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">每一个亮起的格子，都是你生命中一个真实的夜晚。支持按年切换，自动统计年度酒精摄入量。</p>
+            <div class="heatmap-stats">
+                <div class="stat-item">
+                    <span class="val">156</span>
+                    <span class="lab">Records / 场次</span>
+                </div>
+                <div class="stat-item">
+                    <span class="val">2.4k</span>
+                    <span class="lab">Total Alcohol / 累计摄入</span>
+                </div>
+            </div>
+        </div>
+        <div class="heatmap-visual fade-up">
+            <div class="heatmap-grid" id="heatmap-grid"></div>
+        </div>
+    </section>
+
+    <!-- Section 5: Poster -->
+    <section id="poster">
+        <div class="section-header">
+            <span class="section-tag">Cinematic Poster</span>
+            <h2 class="section-title">把生活，裁成电影</h2>
+        </div>
+        <div class="poster-display fade-up">
+            <div class="phone-mockup">
+                <div class="mockup-content">
+                    <div class="mockup-poster-art"></div>
+                    <div style="margin-top: 20px; font-family: var(--font-mono); font-size: 0.6rem; color: var(--primary);">GENERATING POSTER...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: Timeline -->
+    <section id="timeline">
+        <div class="section-header" style="text-align: left;">
+            <span class="section-tag">The Timeline</span>
+            <h2 class="section-title">档案随笔</h2>
+        </div>
+        <div class="timeline-container">
+            <div class="timeline-line"></div>
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot"></div>
+                <div class="session-card">
+                    <div class="session-header"><span>2026.05.04 22:30</span><span>PEAK: 0.042%</span></div>
+                    <div class="session-body">精酿皮尔森 500ml · 5.0%</div>
+                    <div class="session-meta">深夜食堂 / 静谧独饮</div>
+                </div>
+            </div>
+            <div class="timeline-item fade-up">
+                <div class="timeline-dot"></div>
+                <div class="session-card">
+                    <div class="session-header"><span>2026.05.02 19:45</span><span>PEAK: 0.055%</span></div>
+                    <div class="session-body">苏格兰单一麦芽威士忌 45ml · 43%</div>
+                    <div class="session-meta">Whisky Bar / 朋友聚会</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="final-download">
+        <h2 class="hero-title" style="font-size: 3rem; margin-bottom: 40px;">开始你的档案</h2>
+        <div class="cta-group">
+            <a href="#" class="btn ios-btn">App Store</a>
+            <a href="#" class="btn android-btn">Android APK</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-quote">“ In vino veritas, in aqua sanitas. ”</div>
+        <p>本应用基于 Widmark 公式估算，仅供娱乐与参考。请勿酒后驾车。</p>
+        <p style="margin-top: 10px;">© 2026 微醺志 · Druk App. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Opener
+        const opener = document.getElementById('opener');
+        const phaseElements = [document.getElementById('phase-1'), document.getElementById('phase-2'), document.getElementById('phase-3'), document.getElementById('tap-hint')];
+        [800, 2800, 4800, 7000].forEach((d, i) => setTimeout(() => { if(phaseElements[i]) phaseElements[i].style.opacity = 1; }, d));
+        function closeOpener() { opener.style.opacity = 0; document.body.classList.remove('no-scroll'); setTimeout(() => opener.style.display = 'none', 1500); }
+
+        // Canvas Background
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+        class Particle {
+            constructor() { this.reset(); }
+            reset() { this.x = Math.random() * canvas.width; this.y = canvas.height + 10; this.size = Math.random() * 2 + 1; this.speed = Math.random() * 0.5 + 0.2; this.opacity = Math.random() * 0.5; }
+            update() { this.y -= this.speed; if (this.y < -10) this.reset(); }
+            draw() { ctx.fillStyle = `rgba(217, 165, 77, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+        }
+        for (let i = 0; i < 60; i++) particles.push(new Particle());
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+        animate();
+
+        // Heatmap
+        const grid = document.getElementById('heatmap-grid');
+        const cells = [];
+        for (let i = 0; i < 26 * 14; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'heatmap-cell';
+            const bac = Math.random() > 0.6 ? Math.random() * 0.08 : 0;
+            cell.dataset.bac = bac;
+            grid.appendChild(cell);
+            cells.push(cell);
+        }
+        function animateHeatmap() {
+            cells.forEach((c, i) => setTimeout(() => {
+                const b = parseFloat(c.dataset.bac);
+                if (b > 0) c.style.backgroundColor = `rgba(217, 165, 77, ${0.2 + (b/0.08)*0.8})`;
+            }, i * 6));
+        }
+
+        // Observer
+        const obs = new IntersectionObserver((es) => {
+            es.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('is-visible');
+                    if (e.target.id === 'bac-line') e.target.classList.add('animated');
+                    if (e.target.id === 'heatmap-grid') animateHeatmap();
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up, #bac-line, #peak-tag, #heatmap-grid').forEach(el => obs.observe(el));
+    </script>
+</body>
+</html>

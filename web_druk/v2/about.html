@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Druk - 关于作者与微醺志</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&family=Noto+Serif+SC:wght@700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0908;
+            --primary: #ffb960;
+            --ivory: #F7EDD9;
+            --text-muted: #D6C3B1;
+        }
+
+        body {
+            margin: 0; background: var(--bg); color: var(--ivory);
+            font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px; margin: 100px auto; padding: 40px;
+            position: relative;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 40px; padding: 80px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        }
+
+        .header { text-align: center; margin-bottom: 60px; }
+        .tag { 
+            font-family: 'Roboto Mono', monospace; font-size: 11px; 
+            color: var(--primary); letter-spacing: 0.4em; text-transform: uppercase;
+        }
+        .title { 
+            font-family: 'Noto Serif SC', serif; font-size: 3rem; 
+            margin: 20px 0; color: var(--ivory);
+        }
+
+        .bio-section { margin-bottom: 60px; }
+        .bio-title { 
+            font-family: 'Playfair Display', serif; font-style: italic;
+            font-size: 1.5rem; color: var(--primary); margin-bottom: 24px;
+        }
+        .bio-text { 
+            font-size: 1.1rem; line-height: 2; color: var(--text-muted); 
+            font-weight: 300; letter-spacing: 0.02em;
+        }
+
+        .tech-stack {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px;
+            margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+        .stack-item h4 { font-family: 'Roboto Mono'; font-size: 12px; color: var(--primary); margin-bottom: 10px; }
+        .stack-item p { font-size: 0.9rem; opacity: 0.7; line-height: 1.6; }
+
+        .footer-back {
+            text-align: center; margin-top: 80px;
+        }
+        .back-btn {
+            color: var(--ivory); text-decoration: none; font-size: 0.9rem;
+            opacity: 0.4; transition: 0.3s; border-bottom: 1px solid transparent;
+            padding-bottom: 5px;
+        }
+        .back-btn:hover { opacity: 1; border-color: var(--primary); color: var(--primary); }
+
+        .signature {
+            font-family: 'Playfair Display', serif; font-style: italic;
+            font-size: 2rem; color: var(--primary); margin-top: 40px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="glass-card">
+            <div class="header">
+                <span class="tag">The Creator</span>
+                <h1 class="title">关于作者 · Bestskillz</h1>
+            </div>
+
+            <div class="bio-section">
+                <h2 class="bio-title">“Another Round, Another Responsibility.”</h2>
+                <p class="bio-text">
+                    我是一名热爱独立开发的创造者。当电影《酒精计划》(Druk) 中的镜头在那一曲 <i>"What a Life"</i> 中结束时，我被那种对生命张力的追求深深打动。
+                    <br><br>
+                    开发《微醺志》的初衷，并非为了鼓励沉沦，而是为了在精确的数据与诗意的生活之间架起一座桥。我希望通过这款工具，让每一个热爱生活的人都能在“微醺”这一阈值内，找回那失落的 0.05% 的本真，同时保持一份对清醒的敬畏。
+                </p>
+            </div>
+
+            <div class="tech-stack">
+                <div class="stack-item">
+                    <h4>STITCH DESIGN SYSTEM</h4>
+                    <p>我为 Druk 打造了一套专属的视觉系统，追求 Apple 级的交互质感与极致的暗场排版。</p>
+                </div>
+                <div class="stack-item">
+                    <h4>FLUTTER & ART</h4>
+                    <p>利用跨端技术，将高精度的计算逻辑与流动的生成艺术完美融合在移动端体验中。</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 60px;">
+                <div class="signature">Bestskillz</div>
+                <p style="font-family: 'Roboto Mono'; font-size: 10px; opacity: 0.3; margin-top: 20px;">CRAFTED WITH SOUL IN 2026</p>
+            </div>
+        </div>
+
+        <div class="footer-back">
+            <a href="index.html" class="back-btn">← 返回首页 BACK TO HOME</a>
+        </div>
+    </div>
+</body>
+</html>
