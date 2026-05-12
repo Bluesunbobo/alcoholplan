@@ -349,6 +349,67 @@
             .hero-title { font-size: 5rem; }
             .download-buttons { flex-direction: column; align-items: center; }
         }
+
+        @media (max-width: 768px) {
+            /* Nav */
+            nav { padding: 15px 20px; flex-direction: column; gap: 15px; }
+            .nav-links { gap: 15px; flex-wrap: wrap; justify-content: center; }
+            .nav-link { font-size: 9px; }
+            .nav-link span { display: none; }
+
+            /* Hero */
+            .hero { padding-top: 20vh; padding-left: 20px; padding-right: 20px; }
+            .hero-title { font-size: 3.5rem; }
+            .hero-subtitle { font-size: 0.95rem; padding: 15px 20px; }
+            
+            /* Video Container */
+            .hero-video-container {
+                width: 100%;
+                /* Different mask for mobile: fade out only at bottom */
+                -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+                mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+            }
+            #video-canvas { opacity: 0.6; } /* Dim background slightly for readability */
+
+            /* Philosophy */
+            .philosophy-section { padding: 100px 20px 50px; }
+            .glass-card { padding: 25px; }
+            
+            /* App Reveal */
+            .reveal-content-box { padding: 0 20px; }
+            .phone-mockup-wrapper { height: auto; padding: 40px 0; }
+            .phone-frame {
+                width: 100%; max-width: 280px; height: auto; aspect-ratio: 0.48;
+                border-radius: 40px; border-width: 8px;
+            }
+            .feature-text-container { height: auto; min-height: 150px; transform: translateY(-20px); }
+            .app-feature-text { padding: 20px; background: rgba(11, 9, 8, 0.8); }
+            .feature-title { font-size: 1.8rem; margin-bottom: 10px; }
+            .feature-desc { font-size: 0.95rem; }
+            
+            /* Heatmap */
+            .heatmap-section { padding: 80px 20px; flex-direction: column; gap: 40px; }
+            .heatmap-visual { width: 100%; overflow-x: auto; padding-bottom: 20px; }
+            .heatmap-grid-large { min-width: 600px; padding: 15px; }
+            
+            /* Timeline */
+            .timeline-section { padding: 80px 20px; }
+            .timeline-container { margin-top: 40px; }
+            .timeline-item { padding-left: 40px; margin-bottom: 50px; }
+            .timeline-dot { left: -10px; }
+            .timeline-line { left: 0; }
+            .session-card { padding: 20px; }
+            
+            /* Poster */
+            .poster-section { padding: 80px 20px; }
+            .poster-phone { width: 100%; max-width: 260px; height: auto; aspect-ratio: 0.48; border-radius: 30px; border-width: 6px; }
+            
+            /* Finale */
+            .finale-section { padding: 100px 20px; }
+            .section-title { font-size: 2.8rem; }
+            .footer { padding-top: 150px; }
+            .footer-links { flex-direction: column; gap: 20px; }
+        }
     </style>
 </head>
 <body>
@@ -357,7 +418,7 @@
     <!-- Global Cinematic Video Layer (Apple Style) -->
     <div class="hero-video-container" style="opacity: 0;">
         <canvas id="video-canvas"></canvas>
-        <video id="hero-vid" muted playsinline style="display:none;">
+        <video id="hero-vid" muted playsinline autoplay preload="auto" crossorigin="anonymous" style="display:none;">
             <source src="hero_video.mp4" type="video/mp4">
         </video>
     </div>
@@ -641,6 +702,15 @@
         
         video.addEventListener('loadeddata', renderFrame);
         window.addEventListener('resize', renderFrame); // 窗口调整时重绘
+        
+        // Kickstart video for mobile Safari
+        document.body.addEventListener('touchstart', () => {
+            video.play().then(() => {
+                video.pause();
+                renderFrame();
+            }).catch(e => console.log('Autoplay prevented', e));
+        }, { once: true });
+
 
         // Philosophy Cards
         gsap.to('.glass-card', {
