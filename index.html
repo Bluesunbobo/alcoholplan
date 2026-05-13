@@ -388,17 +388,21 @@
                 border-radius: 30px; border-width: 6px;
             }
             .feature-text-container { 
-                height: 180px; width: 100%; position: relative; 
+                height: 140px; width: 100%; position: relative; 
                 display: flex; justify-content: center; align-items: flex-start;
-                z-index: 100; order: -1; /* 文字强制排在手机上方 */
+                z-index: 100; order: -1;
+                transform: translateY(0) !important; /* 取消 PC 端的向上偏移 */
+                margin-top: 70px; /* 为顶部导航栏留出空间 */
             }
             .app-feature-text { 
-                padding: 20px; background: rgba(11, 9, 8, 0.9); 
-                border-radius: 20px; border-color: rgba(255, 185, 96, 0.3);
-                width: 100%;
+                padding: 15px 20px; background: rgba(11, 9, 8, 0.9); 
+                border-radius: 16px; border: 1px solid rgba(255, 185, 96, 0.2);
+                width: 100%; max-width: 320px;
+                left: 0; right: 0; margin: auto; /* 安全居中，不干扰 GSAP */
+                text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             }
-            .feature-title { font-size: 1.6rem; margin-bottom: 8px; }
-            .feature-desc { font-size: 0.9rem; line-height: 1.6; }
+            .feature-title { font-size: 1.4rem; margin-bottom: 8px; color: var(--primary); }
+            .feature-desc { font-size: 0.85rem; line-height: 1.6; }
             
             /* Heatmap */
 
