@@ -222,9 +222,15 @@
             box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
         }
         .heatmap-cell { 
-            width: 100%; aspect-ratio: 1; background: rgba(255,255,255,0.03); 
+            width: 100%; background: rgba(255,255,255,0.03); 
             border-radius: 2px; transition: all 0.4s ease;
             position: relative; opacity: 0.1; transform: scale(0.8);
+        }
+        /* 绝对安全的长宽比 1:1 方案 (兼容所有老旧 iOS) */
+        .heatmap-cell::before {
+            content: "";
+            display: block;
+            padding-bottom: 100%;
         }
         .heatmap-cell.active { 
             box-shadow: 0 0 15px rgba(217, 165, 77, 0.4); 
@@ -405,10 +411,13 @@
             .feature-desc { font-size: 0.85rem; line-height: 1.6; }
             
             /* Heatmap */
-
             .heatmap-section { padding: 80px 20px; flex-direction: column; gap: 40px; }
-            .heatmap-visual { width: 100%; overflow-x: auto; padding-bottom: 20px; }
-            .heatmap-grid-large { min-width: 600px; padding: 15px; }
+            .heatmap-visual { width: 100%; overflow-x: visible; padding-bottom: 20px; }
+            .heatmap-grid-large { 
+                min-width: 100%; padding: 15px; 
+                gap: 2px; /* 移动端缩小间距，确保 26 列能完美排下 */
+                border-radius: 12px;
+            }
             
             /* Timeline */
             .timeline-section { padding: 80px 20px; }
