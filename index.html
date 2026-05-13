@@ -602,13 +602,48 @@
                                 <span class="btn-main">App Store</span>
                             </div>
                         </a>
-                        <a href="https://1859499971.share.123865.com/123pan/vLptvd-Toj8H" target="_blank" class="stitch-download-btn">
+                        <a href="#" id="android-download-btn" target="_blank" class="stitch-download-btn">
                             <span class="material-symbols-outlined btn-icon">android</span>
                             <div class="btn-text">
-                                <span class="btn-label">Get it for</span>
+                                <span class="btn-label" id="download-hint">Get it for</span>
                                 <span class="btn-main">Android (APK)</span>
                             </div>
                         </a>
+                        <script>
+                            function updateDownloadLink() {
+                                const btn = document.getElementById('android-download-btn');
+                                const hint = document.getElementById('download-hint');
+                                const now = new Date();
+                                const hours = now.getHours();
+                                const mins = now.getMinutes();
+                                const currentTime = hours * 60 + mins;
+
+                                const znasStart = 10 * 60; // 10:00
+                                const znasEnd = 0 * 60 + 30; // 00:30 (次日)
+
+                                // 判断是否在极空间开机时间内
+                                let isZnasOnline = false;
+                                if (currentTime >= znasStart || currentTime <= znasEnd) {
+                                    isZnasOnline = true;
+                                }
+
+                                if (isZnasOnline) {
+                                    btn.href = "https://t3.znas.cn/GwwScZQUxTj";
+                                    hint.innerText = "Get it for (极速下载)";
+                                    btn.onclick = null; // 清除自动复制密码逻辑
+                                } else {
+                                    btn.href = "https://wwbsq.lanzouq.com/is1qE3pbtora";
+                                    hint.innerText = "Get it for (密码: druk)";
+                                    btn.onclick = function() {
+                                        navigator.clipboard.writeText('druk');
+                                        console.log('Fallback to Lanzou: Password copied');
+                                    };
+                                }
+                            }
+                            updateDownloadLink();
+                            // 每分钟检查一次时间，防止用户在临界点访问
+                            setInterval(updateDownloadLink, 60000);
+                        </script>
                     </div>
 
                     <div class="qr-card">
