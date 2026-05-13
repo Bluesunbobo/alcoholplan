@@ -153,65 +153,36 @@
         .card-desc { font-family: var(--font-zh); font-size: 0.95rem; color: var(--ivory); line-height: 1.8; opacity: 0.9; }
         .card-desc-en { font-family: var(--font-en); font-size: 0.85rem; font-style: italic; color: var(--text-muted); line-height: 1.6; }
 
-        /* Section 3: App Reveal */
-        .app-reveal-section { 
-            height: 400vh; padding: 0; align-items: flex-start; z-index: 10; 
-            scroll-margin-top: 100px; /* 解决导航栏遮挡锚点的问题 */
+        /* App Features Standard Section */
+        .features-standard-section {
+            padding: 100px 10%; display: flex; flex-direction: column; gap: 150px; z-index: 10;
+            scroll-margin-top: 100px; width: 100%;
         }
-        .reveal-sticky {
-            position: sticky; top: 0; height: 100vh; width: 100%;
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-            z-index: 10;
-        }
-        .reveal-content-box {
-            display: grid; grid-template-columns: 1fr 450px 1fr; 
-            align-items: flex-end; width: 100%; max-width: 1400px; padding: 0 50px;
-            position: relative; z-index: 11;
-        }
-        .app-feature-text { 
-            opacity: 0; max-width: 400px; 
-            padding: 40px; border-radius: 24px;
-            background: rgba(11, 9, 8, 0.2); 
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        .feature-row { display: flex; align-items: center; justify-content: center; gap: 80px; width: 100%; }
+        .feature-row.reverse { flex-direction: row-reverse; }
+        .app-feature-text {
+            flex: 1; max-width: 500px; padding: 40px; 
+            background: rgba(11, 9, 8, 0.6); backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 185, 96, 0.15); border-radius: 24px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
         .feature-title { font-size: 2.5rem; margin-bottom: 20px; color: var(--primary); font-weight: 700; }
-        .feature-desc { 
-            font-size: 1.1rem; line-height: 1.8; color: var(--text-muted); 
-            font-weight: 500; letter-spacing: 0.02em;
-        }
+        .feature-desc { font-size: 1.1rem; line-height: 1.8; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; }
         
-        /* 文字容器统一在左侧 */
-        .feature-text-container {
-            position: relative; width: 100%; height: 300px;
-            display: flex; justify-content: center; align-items: center;
-            transform: translateY(-50px);
-        }
-        .feature-left, .feature-right { position: absolute; top: 0; left: 0; width: 100%; }
-
-        /* Phone Mockup */
-        .phone-mockup-wrapper {
-            position: relative; width: 100%; height: 90vh;
-            display: flex; justify-content: center; align-items: center;
-            z-index: 25; /* 确保在视频层之上 */
-        }
+        .feature-mockup { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
         .phone-frame {
-            width: calc(90vh * 0.48); height: 90vh; background: #000;
+            width: 320px; height: 650px; background: #000;
             border: 10px solid #222; border-radius: 50px;
             box-shadow: 0 30px 60px rgba(0,0,0,0.5);
             position: relative; overflow: hidden;
             z-index: 26;
         }
-        /* 手机背光暗场：强行压制背景视频的干扰 */
         .phone-backlight {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 180%; height: 130%;
-            background: radial-gradient(circle, rgba(0,0,0,0.95) 40%, transparent 80%);
-            z-index: -1; pointer-events: none;
-            opacity: 0; transition: opacity 0.8s ease;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 180%; height: 130%; background: radial-gradient(circle, rgba(0,0,0,0.8) 20%, transparent 70%);
+            z-index: 25; pointer-events: none;
         }
+        .mockup-image-layer { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: #000; }
         .mockup-image-layer img { width: 100%; height: 100%; object-fit: cover; filter: brightness(1.1) contrast(1.1); }
 
         /* Heatmap Section */
@@ -422,34 +393,14 @@
             .philosophy-section { padding: 100px 20px 50px; }
             .glass-card { padding: 25px; }
             
-            /* App Reveal */
-            .reveal-content-box { 
-                display: flex; flex-direction: column; 
-                align-items: center; justify-content: center;
-                padding: 0 20px; gap: 30px;
-                height: 100vh;
-            }
-            .phone-mockup-wrapper { height: auto; padding: 0; }
-            .phone-frame {
-                width: 100%; max-width: 240px; height: auto; aspect-ratio: 0.48;
-                border-radius: 30px; border-width: 6px;
-            }
-            .feature-text-container { 
-                height: 140px; width: 100%; position: relative; 
-                display: flex; justify-content: center; align-items: flex-start;
-                z-index: 100; order: -1;
-                transform: translateY(0) !important; /* 取消 PC 端的向上偏移 */
-                margin-top: 70px; /* 为顶部导航栏留出空间 */
-            }
-            .app-feature-text { 
-                padding: 15px 20px; background: rgba(11, 9, 8, 0.9); 
-                border-radius: 16px; border: 1px solid rgba(255, 185, 96, 0.2);
-                width: 100%; max-width: 320px;
-                left: 0; right: 0; margin: auto; /* 安全居中，不干扰 GSAP */
-                text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            }
-            .feature-title { font-size: 1.4rem; margin-bottom: 8px; color: var(--primary); }
-            .feature-desc { font-size: 0.85rem; line-height: 1.6; }
+            /* App Features Standard */
+            .features-standard-section { gap: 80px; padding: 60px 5%; }
+            .feature-row, .feature-row.reverse { flex-direction: column; gap: 40px; text-align: center; }
+            .app-feature-text { max-width: 100%; padding: 30px; }
+            .feature-title { font-size: 1.8rem; margin-bottom: 15px; }
+            .feature-desc { font-size: 0.95rem; line-height: 1.6; }
+            .feature-mockup .phone-frame { width: 260px; height: 530px; border-width: 8px; border-radius: 35px; aspect-ratio: auto; }
+            .phone-backlight { opacity: 0; }
             
             /* Heatmap */
             .heatmap-section { padding: 80px 20px; flex-direction: column; gap: 40px; }
@@ -549,46 +500,37 @@
                 </div>
             </section>
 
-            <!-- Section 3: App Reveal (Scrollytelling) -->
-            <section class="app-reveal-section" id="features">
-                <div class="reveal-sticky">
-                    <div class="reveal-content-box">
-                        <!-- 左侧：文案容器 (统一放置) -->
-                        <div class="feature-text-container">
-                            <!-- 第一阶段文字 -->
-                            <div class="app-feature-text feature-left" id="feat-left" style="opacity: 0;">
-                                <h3 class="feature-title">实时微醺曲线</h3>
-                                <p class="feature-desc">基于动态代谢算法，实时模拟您的血液酒精浓度（BAC）。精准捕捉从清醒到微醺的每一个刻度。</p>
-                            </div>
-                            <!-- 第二阶段文字 -->
-                            <div class="app-feature-text feature-right" id="feat-right" style="opacity: 0;">
-                                <h3 class="feature-title">个人饮酒档案</h3>
-                                <p class="feature-desc">详细记录每一场酒局的酒种、摄入量及实时浓度。为您沉淀一份专属的饮酒日志。</p>
+            <!-- Section 3: App Features -->
+            <section id="features" class="features-standard-section">
+                <div class="feature-row">
+                    <div class="app-feature-text">
+                        <h3 class="feature-title">实时微醺曲线</h3>
+                        <p class="feature-desc">基于动态代谢算法，实时模拟您的血液酒精浓度（BAC）。精准捕捉从清醒到微醺的每一个刻度。</p>
+                    </div>
+                    <div class="feature-mockup">
+                        <div class="phone-backlight"></div>
+                        <div class="phone-frame">
+                            <div class="mockup-image-layer">
+                                <img src="sobriety_curve.png" alt="BAC Curve Screenshot" onerror="this.style.display='none'; document.getElementById('curve-fallback').style.display='flex';">
+                                <div id="curve-fallback" style="display:none; color:var(--primary); font-family:var(--font-mono); font-size:10px; text-align:center; padding:20px;">[ CURVE SCREENSHOT ]</div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- 中间：真机模型 -->
-                        <div class="phone-mockup-wrapper">
-                            <!-- 新增：背光暗场 -->
-                            <div class="phone-backlight" id="phone-bg-glow"></div>
-                            
-                            <div class="phone-frame">
-                                <div class="mockup-image-layer">
-                                    <!-- 实时渐显截图 -->
-                                    <div class="mockup-image-layer" id="mockup-curve" style="position:absolute; opacity: 0; display: flex; justify-content: center; align-items: center; background: #000;">
-                                        <img src="sobriety_curve.png" alt="BAC Curve Screenshot" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; document.getElementById('curve-fallback').style.display='flex';">
-                                        <div id="curve-fallback" style="display:none; color:var(--primary); font-family:var(--font-mono); font-size:10px; text-align:center; padding:20px;">[ CURVE SCREENSHOT ]</div>
-                                    </div>
-                                    <div class="mockup-image-layer" id="mockup-archive" style="position:absolute; opacity: 0; display: flex; justify-content: center; align-items: center; background: #000;">
-                                        <img src="archive_screenshot.png" alt="Archive Screenshot" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; document.getElementById('archive-fallback').style.display='flex';">
-                                        <div id="archive-fallback" style="display:none; color:var(--primary); font-family:var(--font-mono); font-size:10px; text-align:center; padding:20px;">[ ARCHIVE SCREENSHOT ]</div>
-                                    </div>
-                                </div>
+                <div class="feature-row reverse">
+                    <div class="app-feature-text">
+                        <h3 class="feature-title">个人饮酒档案</h3>
+                        <p class="feature-desc">详细记录每一场酒局的酒种、摄入量及实时浓度。为您沉淀一份专属的饮酒日志。</p>
+                    </div>
+                    <div class="feature-mockup">
+                        <div class="phone-backlight"></div>
+                        <div class="phone-frame">
+                            <div class="mockup-image-layer">
+                                <img src="archive_screenshot.png" alt="Archive Screenshot" onerror="this.style.display='none'; document.getElementById('archive-fallback').style.display='flex';">
+                                <div id="archive-fallback" style="display:none; color:var(--primary); font-family:var(--font-mono); font-size:10px; text-align:center; padding:20px;">[ ARCHIVE SCREENSHOT ]</div>
                             </div>
                         </div>
-
-                        <!-- 右侧：留空，让位背景图 -->
-                        <div class="empty-side"></div>
                     </div>
                 </div>
             </section>
@@ -835,40 +777,20 @@
             opacity: 1, y: 0, duration: 1, stagger: 0.2
         });
 
-        // App Reveal - 精准分步叙事
-        const revealTl = gsap.timeline({ 
-            scrollTrigger: { 
-                trigger: '.app-reveal-section', 
-                start: 'top top', 
-                end: 'bottom bottom', 
-                scrub: 1 
-            } 
+        // Feature Rows Animation
+        gsap.utils.toArray('.feature-row').forEach(row => {
+            gsap.from(row, {
+                scrollTrigger: {
+                    trigger: row,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: 'power3.out'
+            });
         });
-
-        // 适配手机端的进场位移
-        const moveVal = isMobile ? 20 : 50;
-        const moveProp = isMobile ? 'y' : 'x';
-
-        revealTl
-            // 第一步：曲线图层与文字入场
-            .to('#phone-bg-glow', { opacity: 1, duration: 1 })
-            .fromTo('#feat-left', 
-                { opacity: 0, [moveProp]: -moveVal }, 
-                { opacity: 1, [moveProp]: 0, duration: 1 }, "<")
-            .fromTo('#mockup-curve', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1 }, "<")
-            .to({}, { duration: 3 })
-            
-            // 第二步：曲线图层与文字离场
-            .to('#feat-left', { opacity: 0, [moveProp]: -moveVal, duration: 1 })
-            .to('#mockup-curve', { opacity: 0, duration: 1 }, "<")
-            
-            // 第三步：档案图层与文字入场
-            .fromTo('#feat-right', 
-                { opacity: 0, [moveProp]: moveVal }, 
-                { opacity: 1, [moveProp]: 0, duration: 1 })
-            .fromTo('#mockup-archive', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1 }, "<")
-            .to({}, { duration: 3 })
-            .to('#phone-bg-glow', { opacity: 0, duration: 1 });
 
         // Heatmap - 恢复 26x14 全年点亮动画
         const largeGrid = document.getElementById('heatmap-grid-large');
