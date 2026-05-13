@@ -732,7 +732,7 @@
         };
 
         if (!isMobile) {
-            // PC端保留电影级逐帧控制
+            // PC端：保留电影级逐帧控制 (Canvas 模式)
             ScrollTrigger.create({
                 trigger: "body",
                 start: "top top",
@@ -750,11 +750,21 @@
                 }
             });
         } else {
-            // 移动端降级为：自动循环播放 + 硬件加速
-            video.style.display = "none"; 
+            // 移动端：直接显示原生 Video 标签，利用硬件加速
+            video.style.display = "block";
+            video.style.width = "100%";
+            video.style.height = "100%";
+            video.style.objectFit = "cover";
             video.loop = true;
-            video.play();
-            gsap.ticker.add(renderFrame); // 每帧绘制，确保连贯性
+            video.setAttribute('loop', 'true'); // 强制双重确保循环
+            videoCanvas.style.display = "none"; // 隐藏性能杀手 Canvas
+            
+            // 尝试播放
+            const startVideo = () => {
+                video.play().catch(e => console.log('Wait for interaction'));
+            };
+            startVideo();
+            document.body.addEventListener('touchstart', startVideo, { once: true });
         }
         
         video.addEventListener('loadeddata', renderFrame);
