@@ -369,7 +369,7 @@
                 -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
                 mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
             }
-            #video-canvas { opacity: 0.6; } /* Dim background slightly for readability */
+            #hero-vid { opacity: 0.6; } /* Dim background slightly for readability */
 
             /* Philosophy */
             .philosophy-section { padding: 100px 20px 50px; }
@@ -415,10 +415,9 @@
 <body>
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Global Cinematic Video Layer (Apple Style) -->
+    <!-- Global Cinematic Video Layer -->
     <div class="hero-video-container" style="opacity: 0;">
-        <canvas id="video-canvas"></canvas>
-        <video id="hero-vid" muted playsinline autoplay preload="auto" crossorigin="anonymous" style="display:none;">
+        <video id="hero-vid" muted playsinline autoplay loop preload="auto" crossorigin="anonymous" style="width:100%; height:100%; object-fit:cover;">
             <source src="hero_video.mp4" type="video/mp4">
         </video>
     </div>
@@ -719,66 +718,17 @@
         gsap.to('.hero-subtitle', { opacity: 0.6, y: 0, duration: 1, delay: 0.5 });
         gsap.to('.hero-video-container', { opacity: 1, duration: 2, delay: 0.5 });
 
-        // Global Cinematic Scroll
+        // Video Autoplay Initialization (Replaced Scrubbing with Smooth Loop)
         const video = document.getElementById('hero-vid');
-        const videoCanvas = document.getElementById('video-canvas');
-        const videoCtx = videoCanvas.getContext('2d');
-        videoCanvas.width = 1280; // 降低 Canvas 采样分辨率以提升手机性能
-        videoCanvas.height = 720;
         
-        const renderFrame = () => {
-            if (videoCtx && video) {
-                videoCtx.clearRect(0, 0, videoCanvas.width, videoCanvas.height);
-                videoCtx.drawImage(video, 0, 0, videoCanvas.width, videoCanvas.height);
-            }
+        const startVideo = () => {
+            video.play().catch(e => console.log('Wait for interaction', e));
         };
-
-        if (!isMobile) {
-            // PC端：保留电影级逐帧控制 (Canvas 模式)
-            ScrollTrigger.create({
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 0.8,
-                onUpdate: self => {
-                    if(video.duration) {
-                        gsap.to(video, {
-                            currentTime: self.progress * video.duration,
-                            duration: 0.1,
-                            ease: "none",
-                            onUpdate: renderFrame
-                        });
-                    }
-                }
-            });
-        } else {
-            // 移动端：直接显示原生 Video 标签，利用硬件加速
-            video.style.display = "block";
-            video.style.width = "100%";
-            video.style.height = "100%";
-            video.style.objectFit = "cover";
-            video.loop = true;
-            video.setAttribute('loop', 'true'); // 强制双重确保循环
-            videoCanvas.style.display = "none"; // 隐藏性能杀手 Canvas
-            
-            // 尝试播放
-            const startVideo = () => {
-                video.play().catch(e => console.log('Wait for interaction'));
-            };
-            startVideo();
-            document.body.addEventListener('touchstart', startVideo, { once: true });
-        }
+        startVideo();
         
-        video.addEventListener('loadeddata', renderFrame);
-        window.addEventListener('resize', renderFrame); // 窗口调整时重绘
-        
-        // Kickstart video for mobile Safari
-        document.body.addEventListener('touchstart', () => {
-            video.play().then(() => {
-                video.pause();
-                renderFrame();
-            }).catch(e => console.log('Autoplay prevented', e));
-        }, { once: true });
+        // Mobile Safari / Chrome Autoplay Kickstart
+        document.body.addEventListener('touchstart', startVideo, { once: true });
+        document.body.addEventListener('click', startVideo, { once: true });
 
 
         // Philosophy Cards
