@@ -79,7 +79,7 @@
         .nav-link:hover::after { width: 100%; }
 
         /* Layout Sections */
-        section { min-height: 100vh; width: 100%; position: relative; display: flex; align-items: center; justify-content: center; padding: 100px 10%; }
+        section { min-height: 100vh; width: 100%; position: relative; display: flex; align-items: center; justify-content: center; padding: 100px 10%; z-index: 10; }
 
         /* Section 1: Hero */
         .hero { flex-direction: column; text-align: left; align-items: flex-start; justify-content: flex-start; padding-top: 25vh; }
@@ -370,13 +370,13 @@
             /* Video Container */
             .hero-video-container {
                 width: 100%;
-                /* Different mask for mobile: fade out only at bottom */
-                -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
-                mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
-                -webkit-mask-composite: source-over; /* 修复 iOS Safari 单层蒙版消失的 Bug */
-                mask-composite: add;
+                /* 彻底废弃移动端的蒙版：100vh 全屏不需要羽化，完美规避所有 iOS Safari 的遮罩消失 Bug */
+                -webkit-mask-image: none !important;
+                mask-image: none !important;
+                -webkit-mask-composite: initial !important;
+                mask-composite: initial !important;
             }
-            #hero-vid { opacity: 0.8; } /* 移动端适当提亮背景视频，确保氛围感 */
+            #hero-vid { opacity: 0.4; } /* 移动端去除了蒙版，视频全屏覆盖，适当调低不透明度以突出上方文字内容 */
 
             /* Philosophy */
             .philosophy-section { padding: 100px 20px 50px; }
