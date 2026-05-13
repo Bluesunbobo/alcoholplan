@@ -677,13 +677,15 @@
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
 
     <script>
-        // Performance Detection
-        const isMobile = window.innerWidth < 768;
+        // Robust Performance Detection
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        const isMobile = isTouchDevice || window.innerWidth < 1024;
 
         const lenis = new Lenis({ 
-            lerp: isMobile ? 0.15 : 0.1, // 移动端稍微加大缓动，减少高频抖动
+            lerp: isMobile ? 0.15 : 0.1, 
             smoothWheel: true 
         });
+
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time) => { lenis.raf(time * 1000); });
 
