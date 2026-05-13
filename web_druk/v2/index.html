@@ -78,8 +78,11 @@
         .nav-link:hover { opacity: 1; }
         .nav-link:hover::after { width: 100%; }
 
+        /* Nav Pull Tab (Mobile/Pad) */
+        .nav-pull-tab { display: none; }
+
         /* Layout Sections */
-        section { min-height: 100vh; width: 100%; position: relative; display: flex; align-items: center; justify-content: center; padding: 100px 10%; z-index: 10; }
+        section { min-height: 100vh; width: 100%; position: relative; display: flex; align-items: center; justify-content: center; padding: 100px 10%; }
 
         /* Section 1: Hero */
         .hero { flex-direction: column; text-align: left; align-items: flex-start; justify-content: flex-start; padding-top: 25vh; }
@@ -350,6 +353,43 @@
 
         /* Responsive */
         @media (max-width: 1024px) {
+            nav {
+                transform: translateY(-100%);
+                transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            }
+            nav.nav-active {
+                transform: translateY(0);
+            }
+            .nav-pull-tab {
+                display: flex; justify-content: center; align-items: flex-start;
+                position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+                width: 70px; height: 30px; 
+                background: rgba(11, 9, 8, 0.85);
+                backdrop-filter: blur(15px);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-top: none;
+                border-radius: 0 0 20px 20px;
+                cursor: pointer;
+                color: var(--primary);
+                padding-top: 2px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            }
+            @keyframes arrow-bounce {
+                0%, 100% { transform: translateY(0px); opacity: 0.4; text-shadow: none; }
+                50% { transform: translateY(4px); opacity: 1; text-shadow: 0 0 10px var(--primary); }
+            }
+            .nav-pull-tab .material-symbols-outlined {
+                font-size: 26px;
+                animation: arrow-bounce 1.5s infinite ease-in-out;
+                transition: transform 0.4s, opacity 0.4s;
+            }
+            nav.nav-active .nav-pull-tab .material-symbols-outlined {
+                animation: none;
+                transform: rotate(180deg) translateY(-2px);
+                opacity: 0.8;
+                text-shadow: none;
+            }
+
             .philosophy-grid { grid-template-columns: 1fr; }
             .reveal-content-box { grid-template-columns: 1fr; }
             .hero-title { font-size: 5rem; }
@@ -370,13 +410,13 @@
             /* Video Container */
             .hero-video-container {
                 width: 100%;
-                /* 彻底废弃移动端的蒙版：100vh 全屏不需要羽化，完美规避所有 iOS Safari 的遮罩消失 Bug */
-                -webkit-mask-image: none !important;
-                mask-image: none !important;
-                -webkit-mask-composite: initial !important;
-                mask-composite: initial !important;
+                /* Different mask for mobile: fade out only at bottom */
+                -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+                mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+                -webkit-mask-composite: source-over; /* 修复 iOS Safari 单层蒙版消失的 Bug */
+                mask-composite: add;
             }
-            #hero-vid { opacity: 0.4; } /* 移动端去除了蒙版，视频全屏覆盖，适当调低不透明度以突出上方文字内容 */
+            #hero-vid { opacity: 0.8; } /* 移动端适当提亮背景视频，确保氛围感 */
 
             /* Philosophy */
             .philosophy-section { padding: 100px 20px 50px; }
@@ -450,13 +490,17 @@
         </video>
     </div>
 
-    <nav>
+    <nav id="top-nav" class="nav-active">
         <div class="logo" onclick="window.scrollTo({top:0, behavior:'smooth'})">微醺志 · <span>DRUK</span></div>
         <div class="nav-links">
             <a href="#" class="nav-link">HOME <span>/ 首页</span></a>
             <a href="#philosophy" class="nav-link">PHILOSOPHY <span>/ 微醺哲学</span></a>
             <a href="#features" class="nav-link">FEATURES <span>/ 功能展示</span></a>
             <a href="#download" class="nav-link">DOWNLOAD <span>/ 立即下载</span></a>
+        </div>
+        <!-- Mobile/Pad Nav Pull Tab -->
+        <div id="nav-pull-tab" class="nav-pull-tab" onclick="document.getElementById('top-nav').classList.toggle('nav-active')">
+            <span class="material-symbols-outlined">keyboard_arrow_down</span>
         </div>
     </nav>
 
@@ -715,6 +759,32 @@
 
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+
+        // Mobile/Pad Nav Auto-hide Logic
+        const topNav = document.getElementById('top-nav');
+        let hasScrolledDown = false;
+        
+        lenis.on('scroll', (e) => {
+            if (window.innerWidth <= 1024) {
+                const scrollY = window.scrollY;
+                if (scrollY > 150 && !hasScrolledDown) {
+                    topNav.classList.remove('nav-active');
+                    hasScrolledDown = true;
+                } else if (scrollY <= 50 && hasScrolledDown) {
+                    topNav.classList.add('nav-active');
+                    hasScrolledDown = false;
+                }
+            }
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1024) {
+                    topNav.classList.remove('nav-active');
+                    hasScrolledDown = true;
+                }
+            });
+        });
 
         // Particles
         const scene = new THREE.Scene();
