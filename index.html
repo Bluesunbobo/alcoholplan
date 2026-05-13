@@ -376,18 +376,32 @@
             .glass-card { padding: 25px; }
             
             /* App Reveal */
-            .reveal-content-box { padding: 0 20px; }
-            .phone-mockup-wrapper { height: auto; padding: 40px 0; }
+            .reveal-content-box { 
+                display: flex; flex-direction: column; 
+                align-items: center; justify-content: center;
+                padding: 0 20px; gap: 30px;
+                height: 100vh;
+            }
+            .phone-mockup-wrapper { height: auto; padding: 0; }
             .phone-frame {
-                width: 100%; max-width: 280px; height: auto; aspect-ratio: 0.48;
+                width: 100%; max-width: 240px; height: auto; aspect-ratio: 0.48;
                 border-radius: 30px; border-width: 6px;
             }
-            .feature-text-container { height: auto; min-height: 150px; transform: translateY(-20px); }
-            .app-feature-text { padding: 20px; background: rgba(11, 9, 8, 0.8); }
-            .feature-title { font-size: 1.8rem; margin-bottom: 10px; }
-            .feature-desc { font-size: 0.95rem; }
+            .feature-text-container { 
+                height: 180px; width: 100%; position: relative; 
+                display: flex; justify-content: center; align-items: flex-start;
+                z-index: 100; order: -1; /* 文字强制排在手机上方 */
+            }
+            .app-feature-text { 
+                padding: 20px; background: rgba(11, 9, 8, 0.9); 
+                border-radius: 20px; border-color: rgba(255, 185, 96, 0.3);
+                width: 100%;
+            }
+            .feature-title { font-size: 1.6rem; margin-bottom: 8px; }
+            .feature-desc { font-size: 0.9rem; line-height: 1.6; }
             
             /* Heatmap */
+
             .heatmap-section { padding: 80px 20px; flex-direction: column; gap: 40px; }
             .heatmap-visual { width: 100%; overflow-x: auto; padding-bottom: 20px; }
             .heatmap-grid-large { min-width: 600px; padding: 15px; }
@@ -747,22 +761,30 @@
             } 
         });
 
+        // 适配手机端的进场位移
+        const moveVal = isMobile ? 20 : 50;
+        const moveProp = isMobile ? 'y' : 'x';
+
         revealTl
             // 第一步：曲线图层与文字入场
             .to('#phone-bg-glow', { opacity: 1, duration: 1 })
-            .fromTo('#feat-left', { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 1 }, "<")
+            .fromTo('#feat-left', 
+                { opacity: 0, [moveProp]: -moveVal }, 
+                { opacity: 1, [moveProp]: 0, duration: 1 }, "<")
             .fromTo('#mockup-curve', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1 }, "<")
-            .to({}, { duration: 3 }) // 停顿，让用户看清楚
+            .to({}, { duration: 3 })
             
             // 第二步：曲线图层与文字离场
-            .to('#feat-left', { opacity: 0, x: -50, duration: 1 })
+            .to('#feat-left', { opacity: 0, [moveProp]: -moveVal, duration: 1 })
             .to('#mockup-curve', { opacity: 0, duration: 1 }, "<")
             
             // 第三步：档案图层与文字入场
-            .fromTo('#feat-right', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 1 })
+            .fromTo('#feat-right', 
+                { opacity: 0, [moveProp]: moveVal }, 
+                { opacity: 1, [moveProp]: 0, duration: 1 })
             .fromTo('#mockup-archive', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1 }, "<")
             .to({}, { duration: 3 })
-            .to('#phone-bg-glow', { opacity: 0, duration: 1 }); // 结束时淡出暗场
+            .to('#phone-bg-glow', { opacity: 0, duration: 1 });
 
         // Heatmap - 恢复 26x14 全年点亮动画
         const largeGrid = document.getElementById('heatmap-grid-large');
