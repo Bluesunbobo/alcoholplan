@@ -677,7 +677,13 @@
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
 
     <script>
-        const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+        // Performance Detection
+        const isMobile = window.innerWidth < 768;
+
+        const lenis = new Lenis({ 
+            lerp: isMobile ? 0.15 : 0.1, // 移动端稍微加大缓动，减少高频抖动
+            smoothWheel: true 
+        });
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time) => { lenis.raf(time * 1000); });
 
@@ -687,13 +693,20 @@
         camera.position.z = 5;
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        const particleCount = isMobile ? 1500 : 5000; // 移动端减负
         const geo = new THREE.BufferGeometry();
-        const posArr = new Float32Array(5000 * 3);
-        for(let i=0; i<5000*3; i++) posArr[i] = (Math.random()-0.5)*10;
+        const posArr = new Float32Array(particleCount * 3);
+        for(let i=0; i<particleCount*3; i++) posArr[i] = (Math.random()-0.5)*10;
         geo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
-        const points = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xFFB960, size: 0.02, transparent: true, opacity: 0.5 }));
+        const points = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xFFB960, size: 0.02, transparent: true, opacity: 0.4 }));
         scene.add(points);
-        function anim() { points.rotation.y += 0.001; renderer.render(scene, camera); requestAnimationFrame(anim); }
+        
+        function anim() { 
+            points.rotation.y += 0.001; 
+            renderer.render(scene, camera); 
+            requestAnimationFrame(anim); 
+        }
         anim();
 
         // GSAP Animations
@@ -704,11 +717,12 @@
         gsap.to('.hero-subtitle', { opacity: 0.6, y: 0, duration: 1, delay: 0.5 });
         gsap.to('.hero-video-container', { opacity: 1, duration: 2, delay: 0.5 });
 
-        // Global Cinematic Scroll - 贯穿全站的逐帧控制 (Apple Style)
+        // Global Cinematic Scroll
         const video = document.getElementById('hero-vid');
         const videoCanvas = document.getElementById('video-canvas');
         const videoCtx = videoCanvas.getContext('2d');
-        videoCanvas.width = 1920; videoCanvas.height = 1080;
+        videoCanvas.width = 1280; // 降低 Canvas 采样分辨率以提升手机性能
+        videoCanvas.height = 720;
         
         const renderFrame = () => {
             if (videoCtx && video) {
@@ -717,23 +731,31 @@
             }
         };
 
-        // 贯穿整个 body 滚动长度进行视频同步
-        ScrollTrigger.create({
-            trigger: "body",
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 0.8, // 柔和的跟随感
-            onUpdate: self => {
-                if(video.duration) {
-                    gsap.to(video, {
-                        currentTime: self.progress * video.duration,
-                        duration: 0.1,
-                        ease: "none",
-                        onUpdate: renderFrame
-                    });
+        if (!isMobile) {
+            // PC端保留电影级逐帧控制
+            ScrollTrigger.create({
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 0.8,
+                onUpdate: self => {
+                    if(video.duration) {
+                        gsap.to(video, {
+                            currentTime: self.progress * video.duration,
+                            duration: 0.1,
+                            ease: "none",
+                            onUpdate: renderFrame
+                        });
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            // 移动端降级为：自动循环播放 + 硬件加速
+            video.style.display = "none"; 
+            video.loop = true;
+            video.play();
+            gsap.ticker.add(renderFrame); // 每帧绘制，确保连贯性
+        }
         
         video.addEventListener('loadeddata', renderFrame);
         window.addEventListener('resize', renderFrame); // 窗口调整时重绘
