@@ -18,8 +18,10 @@ class ShareService {
     required AlcoholBrain brain,
     DrinkSession? historySession,
   }) async {
+    final bool isHistory = historySession != null;
+    final int pageCount = isHistory ? 2 : 3;
     final PageController pageController = PageController(viewportFraction: 0.82);
-    final List<GlobalKey> keys = List.generate(3, (_) => GlobalKey());
+    final List<GlobalKey> keys = List.generate(pageCount, (_) => GlobalKey());
     int currentPage = 0;
 
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -83,17 +85,25 @@ class ShareService {
                 Expanded(
                   child: PageView.builder(
                     controller: pageController,
-                    itemCount: 3,
+                    itemCount: pageCount,
                     onPageChanged: (i) => setState(() => currentPage = i),
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       Widget child;
-                      if (index == 0) {
-                        child = _MomentPoster(brain: brain, session: historySession);
-                      } else if (index == 1) {
-                        child = _CurvePoster(brain: brain, session: historySession);
+                      if (!isHistory) {
+                        if (index == 0) {
+                          child = _MomentPoster(brain: brain);
+                        } else if (index == 1) {
+                          child = _CurvePoster(brain: brain, session: null);
+                        } else {
+                          child = _AnnualPoster(brain: brain);
+                        }
                       } else {
-                        child = _AnnualPoster(brain: brain);
+                        if (index == 0) {
+                          child = _CurvePoster(brain: brain, session: historySession);
+                        } else {
+                          child = _AnnualPoster(brain: brain);
+                        }
                       }
 
                       return Center(
@@ -117,7 +127,7 @@ class ShareService {
                 // Indicators
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(3, (i) => AnimatedContainer(
+                  children: List.generate(pageCount, (i) => AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     width: i == currentPage ? 12 : 6,
                     height: 6,
@@ -268,28 +278,15 @@ class _PosterShell extends StatelessWidget {
 // ── Poster 1: Moment (Based on Image 3) ────────
 class _MomentPoster extends StatelessWidget {
   final AlcoholBrain brain;
-  final DrinkSession? session;
-  const _MomentPoster({required this.brain, this.session});
+  const _MomentPoster({required this.brain});
 
   @override
   Widget build(BuildContext context) {
-    final double bac = session?.peakBAC ?? brain.bacPercentage;
-    final String state = session != null ? "历史回顾" : brain.currentStateNameZh;
+    final double bac = brain.bacPercentage;
+    final String state = brain.currentStateNameZh;
 
-    final int seed = (session?.id ?? "").hashCode.abs();
-    final bool hasCustom = session?.customQuote != null && session!.customQuote!.isNotEmpty;
-    final String quoteText;
-    final String quoteSub;
-    
-    if (hasCustom) {
-      quoteText = session!.customQuote!;
-      quoteSub = "";
-    } else {
-      final quotes = QuotesDB.shared.neutralQuotes;
-      final mq = quotes[seed % quotes.length];
-      quoteText = mq.quote;
-      quoteSub = mq.translation.toUpperCase();
-    }
+    final String quoteText = brain.currentQuoteZh;
+    final String quoteSub = brain.currentQuoteEn.toUpperCase();
 
     return _PosterShell(
       footerState: 'MOMENT LEDGER',
@@ -356,25 +353,27 @@ class _CurvePoster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<BACPoint> points = session != null ? brain.getPointsForEntries(session!.entries) : brain.getChartPoints();
+    final bool isHistory = session != null;
+    final List<BACPoint> points = isHistory ? brain.getPointsForEntries(session!.entries) : brain.getChartPoints();
     final double bac = points.isEmpty ? 0.0 : points.map((p) => p.y).reduce((a, b) => a > b ? a : b);
-    final DateTime? peakTime = session != null ? session!.startTime.add(const Duration(minutes: 45)) : brain.peakBACTime;
-    final double totalVol = session != null ? session!.entries.fold(0.0, (s, e) => s + e.volumeML) : brain.totalLiquidVolumeML;
     
-    final int seed = (session?.id ?? "").hashCode.abs();
-    final bool hasCustom = session?.customQuote != null && session!.customQuote!.isNotEmpty;
-    final String qText;
-    final String qSub;
-    
-    if (hasCustom) {
-      qText = session!.customQuote!;
-      qSub = "";
+    DateTime? peakTime;
+    if (isHistory && session!.entries.isNotEmpty) {
+      final maxPoint = points.reduce((a, b) => a.y > b.y ? a : b);
+      final grams = session!.entries.fold(0.0, (sum, e) => sum + (e.volumeML * e.abv * 0.789));
+      final totalPotentialPeak = grams / (brain.weight * brain.gender.rFactor * 10);
+      final hoursUntilSober = totalPotentialPeak / brain.metabolicRate.value;
+      final currentHours = maxPoint.x * (hoursUntilSober + 1);
+      peakTime = session!.entries.first.timestamp.add(Duration(seconds: (currentHours * 3600).round()));
     } else {
-      final quotes = QuotesDB.shared.neutralQuotes;
-      final pq = quotes[seed % quotes.length];
-      qText = pq.quote;
-      qSub = pq.translation.toUpperCase();
+      peakTime = brain.peakBACTime;
     }
+
+    final double totalVol = isHistory ? session!.entries.fold(0.0, (s, e) => s + e.volumeML) : brain.totalLiquidVolumeML;
+    
+    final QuoteData quoteData = brain.getQuoteForBAC(bac);
+    final String qText = quoteData.quote;
+    final String qSub = quoteData.translation.toUpperCase();
 
     return _PosterShell(
       footerState: 'METABOLISM CURVE',
