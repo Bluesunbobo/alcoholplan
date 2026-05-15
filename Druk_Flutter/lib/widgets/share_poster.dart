@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,8 +19,8 @@ class ShareService {
     required AlcoholBrain brain,
     DrinkSession? historySession,
   }) async {
-    final bool isHistory = historySession != null;
-    final int pageCount = isHistory ? 2 : 3;
+    final bool isCurrentSession = historySession == null || historySession.id == "active_session";
+    final int pageCount = isCurrentSession ? 3 : 2;
     final PageController pageController = PageController(viewportFraction: 0.82);
     final List<GlobalKey> keys = List.generate(pageCount, (_) => GlobalKey());
     int currentPage = 0;
@@ -90,11 +91,11 @@ class ShareService {
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       Widget child;
-                      if (!isHistory) {
+                      if (isCurrentSession) {
                         if (index == 0) {
                           child = _MomentPoster(brain: brain);
                         } else if (index == 1) {
-                          child = _CurvePoster(brain: brain, session: null);
+                          child = _CurvePoster(brain: brain, session: historySession?.id == "active_session" ? historySession : null);
                         } else {
                           child = _AnnualPoster(brain: brain);
                         }
@@ -494,8 +495,9 @@ class _AnnualPoster extends StatelessWidget {
   Widget build(BuildContext context) {
     final allSessions = brain.getAllSessions();
 
-    // Annual Review always uses high-quality neutral quotes
-    final annualQuote = QuotesDB.shared.neutralQuotes[DateTime.now().year % QuotesDB.shared.neutralQuotes.length];
+    // Annual Review uses random neutral quotes from the library
+    final random = Random();
+    final annualQuote = QuotesDB.shared.neutralQuotes[random.nextInt(QuotesDB.shared.neutralQuotes.length)];
 
     return _PosterShell(
       footerState: 'ANNUAL REVIEW',
