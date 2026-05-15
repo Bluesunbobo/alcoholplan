@@ -576,12 +576,12 @@ class _BACDisplayCardState extends State<_BACDisplayCard> {
       child: Column(
         children: [
           Text(
-            'ESTIMATED BAC',
+            brain.isSimulating ? 'PREDICTED BAC 预测值' : 'REAL-TIME BAC 实时值',
             style: GoogleFonts.robotoMono(
               fontSize: 10,
               fontWeight: FontWeight.bold,
               letterSpacing: 2.0,
-              color: AppColors.onSurface.withOpacity(0.3),
+              color: brain.isSimulating ? Colors.blueAccent : AppColors.onSurface.withOpacity(0.3),
             ),
           ),
           const SizedBox(height: 16),

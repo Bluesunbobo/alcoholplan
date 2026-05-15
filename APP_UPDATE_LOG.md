@@ -16,6 +16,7 @@ This document tracks the feature parity and recent updates for both the iOS (Swi
 | **Real-time BAC Calc** | ✅ | ✅ | Bidirectional binding (BAC/ABV/Vol) |
 | **Default Volumes** | ✅ | ✅ | Updated: Defaults to 0ml initially |
 | **Inactivity Reset** | ❌ | ✅ | **New (Android)**: 1-min timeout resets volume |
+| **BAC State Label** | ❌ | ✅ | **New (Android)**: Labels "实时" vs "预测" |
 | **Quick Select Cards**| ✅ | ✅ | Beer, Wine, Whisky, etc. |
 
 ### 2. Poster Sharing (Poster Generation)
