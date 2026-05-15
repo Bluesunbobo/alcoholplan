@@ -633,7 +633,7 @@ class AlcoholBrain with ChangeNotifier {
       currentQuoteEn = newQuote.translation;
 
       recentQuoteTexts.add(newQuote.quote);
-      if (recentQuoteTexts.length > 8) {
+      if (recentQuoteTexts.length > 20) {
         recentQuoteTexts.removeAt(0);
       }
     }
@@ -649,9 +649,8 @@ class AlcoholBrain with ChangeNotifier {
     );
 
     final candidates = stateRange.quotes.isEmpty ? QuotesDB.shared.neutralQuotes : stateRange.quotes;
-    // Return a consistent random quote based on the BAC value to avoid flickering on rebuilds
-    final seed = (targetBAC * 1000).toInt();
-    final q = candidates[Random(seed).nextInt(candidates.length)];
+    // Use truly random selection to ensure variety every time a poster is generated
+    final q = candidates[Random().nextInt(candidates.length)];
     return QuoteData(q.quote, q.translation);
   }
 

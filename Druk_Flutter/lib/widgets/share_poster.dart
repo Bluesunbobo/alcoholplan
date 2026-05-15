@@ -25,6 +25,11 @@ class ShareService {
     final List<GlobalKey> keys = List.generate(pageCount, (_) => GlobalKey());
     int currentPage = 0;
 
+    // Capture quotes ONCE when the sheet opens for variety and stability
+    final curveQuote = brain.getQuoteForBAC(historySession?.peakBAC ?? brain.peakBAC);
+    final annualQuoteRaw = QuotesDB.shared.neutralQuotes[Random().nextInt(QuotesDB.shared.neutralQuotes.length)];
+    final annualQuote = QuoteData(annualQuoteRaw.quote, annualQuoteRaw.translation);
+
     final double screenHeight = MediaQuery.of(context).size.height;
     
     await showGeneralDialog(
@@ -95,15 +100,15 @@ class ShareService {
                         if (index == 0) {
                           child = _MomentPoster(brain: brain);
                         } else if (index == 1) {
-                          child = _CurvePoster(brain: brain, session: historySession?.id == "active_session" ? historySession : null);
+                          child = _CurvePoster(brain: brain, session: historySession?.id == "active_session" ? historySession : null, quoteOverride: curveQuote);
                         } else {
-                          child = _AnnualPoster(brain: brain);
+                          child = _AnnualPoster(brain: brain, quoteOverride: annualQuote);
                         }
                       } else {
                         if (index == 0) {
-                          child = _CurvePoster(brain: brain, session: historySession);
+                          child = _CurvePoster(brain: brain, session: historySession, quoteOverride: curveQuote);
                         } else {
-                          child = _AnnualPoster(brain: brain);
+                          child = _AnnualPoster(brain: brain, quoteOverride: annualQuote);
                         }
                       }
 
@@ -350,7 +355,8 @@ class _MomentPoster extends StatelessWidget {
 class _CurvePoster extends StatelessWidget {
   final AlcoholBrain brain;
   final DrinkSession? session;
-  const _CurvePoster({required this.brain, this.session});
+  final QuoteData? quoteOverride;
+  const _CurvePoster({required this.brain, this.session, this.quoteOverride});
 
   @override
   Widget build(BuildContext context) {
@@ -372,7 +378,7 @@ class _CurvePoster extends StatelessWidget {
 
     final double totalVol = isHistory ? session!.entries.fold(0.0, (s, e) => s + e.volumeML) : brain.totalLiquidVolumeML;
     
-    final QuoteData quoteData = brain.getQuoteForBAC(bac);
+    final QuoteData quoteData = quoteOverride ?? brain.getQuoteForBAC(bac);
     final String qText = quoteData.quote;
     final String qSub = quoteData.translation.toUpperCase();
 
@@ -489,15 +495,18 @@ class _RealCurvePainter extends CustomPainter {
 // ── Poster 3: Annual (Based on Image 1) ────────
 class _AnnualPoster extends StatelessWidget {
   final AlcoholBrain brain;
-  const _AnnualPoster({required this.brain});
+  final QuoteData? quoteOverride;
+  const _AnnualPoster({required this.brain, this.quoteOverride});
 
   @override
   Widget build(BuildContext context) {
     final allSessions = brain.getAllSessions();
 
-    // Annual Review uses random neutral quotes from the library
-    final random = Random();
-    final annualQuote = QuotesDB.shared.neutralQuotes[random.nextInt(QuotesDB.shared.neutralQuotes.length)];
+    // Annual Review uses random neutral quotes from the library (pre-calculated or random fallback)
+    final annualQuote = quoteOverride ?? QuoteData(
+      QuotesDB.shared.neutralQuotes[Random().nextInt(QuotesDB.shared.neutralQuotes.length)].quote,
+      QuotesDB.shared.neutralQuotes[Random().nextInt(QuotesDB.shared.neutralQuotes.length)].translation,
+    );
 
     return _PosterShell(
       footerState: 'ANNUAL REVIEW',
