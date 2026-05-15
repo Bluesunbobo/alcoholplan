@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +17,25 @@ class RecordPanel extends StatefulWidget {
 class _RecordPanelState extends State<RecordPanel> {
   int _selectedHangoverIndex = 2;
   bool _isPressed = false;
+  Timer? _inactivityTimer;
+
+  void _startInactivityTimer(AlcoholBrain brain) {
+    _inactivityTimer?.cancel();
+    // Only start timer if there is volume to reset
+    if (brain.pendingVolumeML > 0) {
+      _inactivityTimer = Timer(const Duration(minutes: 1), () {
+        if (mounted) {
+          brain.resetPendingDrink();
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _inactivityTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +86,7 @@ class _RecordPanelState extends State<RecordPanel> {
               brain.pendingABV = val / 100;
               brain.selectedDrinkId = 'CUSTOM';
               brain.syncSimulation();
+              _startInactivityTimer(brain);
               HapticFeedback.selectionClick();
             },
           ),
@@ -93,6 +114,7 @@ class _RecordPanelState extends State<RecordPanel> {
               brain.pendingVolumeML = val;
               brain.selectedDrinkId = 'CUSTOM';
               brain.syncSimulation();
+              _startInactivityTimer(brain);
               HapticFeedback.selectionClick();
             },
           ),
@@ -138,6 +160,7 @@ class _RecordPanelState extends State<RecordPanel> {
             onTapCancel: canConfirm ? () => setState(() => _isPressed = false) : null,
             onTap: canConfirm ? () {
               brain.addDrink();
+              _inactivityTimer?.cancel();
               HapticFeedback.heavyImpact();
             } : null,
             child: AnimatedScale(
@@ -208,6 +231,7 @@ class _RecordPanelState extends State<RecordPanel> {
         brain.pendingVolumeML = defaultVolume;
         brain.selectedDrinkId = en;
         brain.syncSimulation();
+        _startInactivityTimer(brain);
         HapticFeedback.mediumImpact();
       },
       child: Container(

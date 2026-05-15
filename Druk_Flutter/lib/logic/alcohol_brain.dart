@@ -182,7 +182,7 @@ class AlcoholBrain with ChangeNotifier {
 
   // Simulation State
   double pendingABV = 0.05;
-  double pendingVolumeML = 330.0;
+  double pendingVolumeML = 0.0;
   double pendingTargetBAC = 0.0;
   bool isSimulating = false;
   String _selectedDrinkId = 'BEER';
@@ -665,6 +665,13 @@ class AlcoholBrain with ChangeNotifier {
     
     activeSessionQuote = quote;
     saveToLocal();
+    notifyListeners();
+  }
+
+  void resetPendingDrink() {
+    pendingVolumeML = 0.0;
+    _selectedDrinkId = 'CUSTOM';
+    syncSimulation();
     notifyListeners();
   }
 }
