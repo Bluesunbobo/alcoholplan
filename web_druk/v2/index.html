@@ -641,15 +641,31 @@
                                 }
 
                                 if (isZnasOnline) {
-                                    btn.href = "https://t3.znas.cn/n3mhUjRIqsf";
+                                    btn.href = "https://t3.znas.cn/GwwScZQUxTj";
                                     hint.innerText = "Get it for (极速下载)";
                                     btn.onclick = null; // 清除自动复制密码逻辑
                                 } else {
                                     btn.href = "https://wwbsq.lanzouq.com/iAmXg3pixydc";
                                     hint.innerText = "Get it for (密码: DRUK)";
-                                    btn.onclick = function() {
-                                        navigator.clipboard.writeText('DRUK');
-                                        console.log('Fallback to Lanzou: Password copied');
+                                    btn.onclick = function(e) {
+                                        const textToCopy = 'DRUK';
+                                        // 兼容性复制方案
+                                        const textArea = document.createElement("textarea");
+                                        textArea.value = textToCopy;
+                                        textArea.style.position = "fixed";
+                                        textArea.style.left = "-9999px";
+                                        textArea.style.top = "0";
+                                        document.body.appendChild(textArea);
+                                        textArea.focus();
+                                        textArea.select();
+                                        textArea.setSelectionRange(0, 99999);
+                                        try {
+                                            document.execCommand('copy');
+                                            alert('下载密码 DRUK 已自动复制');
+                                        } catch (err) {
+                                            console.error('Fallback copy failed', err);
+                                        }
+                                        document.body.removeChild(textArea);
                                     };
                                 }
                             }
